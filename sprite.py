@@ -1,3 +1,3 @@
 
-class Sprite():
+class Sprite:
     pass
