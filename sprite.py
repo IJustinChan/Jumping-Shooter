@@ -16,8 +16,6 @@ class Sprite:
         self._color = color
         self.__speed = speed
         self._SURFACE = pygame.Surface
-        self.__dir_x = 1
-        self.__dir_y = 1
 
     # Setters
     def set_width(self, new_width):
@@ -72,12 +70,6 @@ class Sprite:
         """
         self._color = color
 
-    def reverse_directionX(self):
-        self.__dir_x = self.__dir_x * -1  # Change the y-direction
-
-    def reverse_directionY(self):
-        self.__dir_y = self.__dir_y * -1  # Change the x-direction
-
     # Getters
     def get_pos(self):
         return self.__pos
@@ -99,3 +91,4 @@ class Sprite:
 
     def get_speed(self):
         return self.__speed
+
