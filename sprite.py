@@ -83,12 +83,6 @@ class Sprite:
     def get_height(self):
         return self.__height
 
-    def get_directionX(self):
-        return self.__dir_x
-
-    def get_directionY(self):
-        return self.__dir_y
-
     def get_speed(self):
         return self.__speed
 
