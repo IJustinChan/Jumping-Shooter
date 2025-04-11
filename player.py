@@ -14,8 +14,14 @@ class Player(Sprite):
         self.__bullet_list = []
 
     # --- Methods ---
-    def move_x(self):
-        pass
+    def move_x(self, pressed_keys):
+        if pressed_keys[pygame.K_d] == 1: # Move right
+            self.__x += self.__speed_x
+
+        if pressed_keys[pygame.K_a] == 1:
+            self.__x -= self.__speed_x
+
+        self.__pos = (self.__x, self.__y)
 
     def lose_life(self):
         self.__lives -= 1
