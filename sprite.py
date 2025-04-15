@@ -17,6 +17,13 @@ class Sprite:
         self.__speed = speed
         self._SURFACE = pygame.Surface
 
+    # Methods
+    def check_collision(self, width, height, position):
+        if position[0] + width >= self.__x and position[0] <= self.__x + self.get_width():
+            if position[1] + height >= self.__y and position[1] <= self.__y + self.get_height():
+                return True
+        return False
+
     # Setters
     def set_width(self, new_width):
         """
