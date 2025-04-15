@@ -85,10 +85,10 @@ class Sprite:
         return self._SURFACE
 
     def get_width(self):
-        return self.__width
+        return self._SURFACE.get_width()
 
     def get_height(self):
-        return self.__height
+        return self._SURFACE.get_height()
 
     def get_speed(self):
         return self.__speed

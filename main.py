@@ -43,6 +43,7 @@ class Game():
     # --- Main program code ---
     def run(self):
         title_text = Text("Jumping Shooter", "Arial", 36)
+        print(title_text.get_width())
 
         while True:
             for event in pygame.event.get():
@@ -54,7 +55,8 @@ class Game():
             self.__window.clear_screen()
 
 
-            self.__window.get_surface().blit(title_text.get_surface(), title_text.get_pos())
+            # self.__window.get_surface().blit(title_text.get_surface(), title_text.get_pos())
+            self.__window.get_surface().blit(title_text.get_surface(), (self.__window.get_width()/2 - title_text.get_width()/2, self.__window.get_height()/2 - title_text.get_height()/2))
 
 
             self.__window.update_frame()
