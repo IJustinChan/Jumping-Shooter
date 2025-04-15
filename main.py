@@ -16,7 +16,7 @@ from text import Text
 
 class Game():
     def __init__(self):
-        self.__window = Window("Platformer", 400, 400, 60)
+        self.__window = Window("Platformer", 750, 600, 60)
         self.__level = 1
         # self.__player =
         self.__enemy_list = []
@@ -37,22 +37,32 @@ class Game():
         pass
 
     def draw_texts(self):
+        #self.__window.get_surface().blit(title_text.get_surface(), title_text.get_pos())
         pass
 
     # --- Main program code ---
     def run(self):
+        title_text = Text("Jumping Shooter", "Arial", 36)
+
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
 
+
             self.__window.clear_screen()
+
+
+            self.__window.get_surface().blit(title_text.get_surface(), title_text.get_pos())
+
+
             self.__window.update_frame()
 
 if __name__ == "__main__":
     pygame.init()
     GAME = Game()
+    GAME.create_texts()
     GAME.run()
 
 
