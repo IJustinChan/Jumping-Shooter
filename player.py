@@ -62,7 +62,7 @@ class Player(Sprite):
         self.__lives -= 1
 
     def jump(self):
-        pass
+        self.__speed_y = -self.__gravity_val*8
 
     def shoot(self):
         pass

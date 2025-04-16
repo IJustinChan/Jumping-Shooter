@@ -60,19 +60,22 @@ class Game():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+                
+                # Player jumping
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_w or event.key == pygame.K_UP: # We will need to add extra condition if we are doing double jumps (check jump count)
+                        # --- PROCESSING ---
+                        self.__player.jump()
 
             keys_pressed = pygame.key.get_pressed()
 
             # --- PROCESSING ---
             self.__player.move_x(keys_pressed)
-            # self.__player.apply_gravity()
-
-            if keys_pressed[pygame.K_w] == 1 or keys_pressed[pygame.K_UP] == 1: # We will need to add extra condition we are doing double jumps (check jump count)
-                self.__player.jump() # Not created yet
+            self.__player.apply_gravity()
             
-            if keys_pressed[pygame.K_SPACE] == 1:
-                self.__player.shoot() # Not created yet
 
+            if keys_pressed[pygame.K_SPACE] == 1: # Shoot
+                self.__player.shoot() # Not created yet
 
 
             # --- Handle camera movement (make camera scroll according to how the player moves) ---
@@ -84,7 +87,7 @@ class Game():
 
             if (self.__player.get_pos()[1] - scroll_y <= scroll_area_top) and self.__player.get_speed_y() <= 0: # Player is jumping up
                 if self.__player.get_speed_y() != 0:
-                    scroll_y -= self.__player.get_speed_y()
+                    scroll_y += self.__player.get_speed_y()
                 else:
                     scroll_y -= 5
 
