@@ -68,10 +68,11 @@ class Player(Sprite):
         pass
 
     def landed(self):
-        pass
+        self.__fall_count = 0
+        self.__speed_y = 0
 
     def hit_head(self):
-        pass
+        self.__speed_y *= -1
 
     # --- Accessors ---
     def get_lives(self):

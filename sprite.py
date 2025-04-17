@@ -76,6 +76,7 @@ class Sprite:
         :return: None
         """
         self._color = color
+        self._SURFACE.fill(self._color)
 
     # Getters
     def get_pos(self):

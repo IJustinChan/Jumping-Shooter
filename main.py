@@ -51,7 +51,10 @@ class Game():
         scroll_area_width = 100
         scroll_y = 0
         scroll_area_bottom = 100
-        scroll_area_top = 200
+        scroll_area_top = 150
+
+        TestPlatform = Platform(350, 400, 100)
+        TestPlatform.set_color((0, 255, 0))
 
 
         while True:
@@ -66,6 +69,9 @@ class Game():
                     if event.key == pygame.K_w or event.key == pygame.K_UP: # We will need to add extra condition if we are doing double jumps (check jump count)
                         # --- PROCESSING ---
                         self.__player.jump()
+                    elif event.key == pygame.K_t: # For collision testing purposes
+                        print(self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()))
+                        print(self.__player.get_speed_y())
 
             keys_pressed = pygame.key.get_pressed()
 
@@ -76,6 +82,15 @@ class Game():
 
             if keys_pressed[pygame.K_SPACE] == 1: # Shoot
                 self.__player.shoot() # Not created yet
+            
+            # --- Collisions ---
+            if self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()) is True:
+                if self.__player.get_speed_y() > 0: # Player landed on the platform
+                    self.__player.set_pos(self.__player.get_pos()[0], TestPlatform.get_pos()[1] - self.__player.get_height())
+                    self.__player.landed()
+                elif self.__player.get_speed_y() < 0: # Player's head hit a platform
+                    self.__player.set_pos(self.__player.get_pos()[0], TestPlatform.get_pos()[1] + TestPlatform.get_height())
+                    self.__player.hit_head()
 
 
             # --- Handle camera movement (make camera scroll according to how the player moves) ---
@@ -107,6 +122,7 @@ class Game():
             self.__window.get_surface().blit(title_text.get_surface(), (self.__window.get_width()/2 - title_text.get_width()/2 - scroll_x, self.__window.get_height()/2 - title_text.get_height()/2 - scroll_y))
 
             self.__window.get_surface().blit(self.__player.get_surface(), (self.__player.get_pos()[0] - scroll_x, self.__player.get_pos()[1] - scroll_y))
+            self.__window.get_surface().blit(TestPlatform.get_surface(), (TestPlatform.get_pos()[0] - scroll_x, TestPlatform.get_pos()[1] - scroll_y))
 
 
             self.__window.update_frame()
