@@ -67,11 +67,13 @@ class Game():
                     pygame.quit()
                     exit()
                 
-                # Player jumping
                 if event.type == pygame.KEYDOWN:
+                    # --- PROCESSING ---
                     if event.key == pygame.K_w or event.key == pygame.K_UP: # We will need to add extra condition if we are doing double jumps (check jump count)
-                        # --- PROCESSING ---
                         self.__player.jump()
+                    elif event.key == pygame.K_SPACE: # elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) <= 2: # Add this later to allow only a few bullets at a time
+                        self.__player.shoot()
+
                     elif event.key == pygame.K_t: # For collision testing purposes
                         print(self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()))
                         print(self.__player.get_speed_y())
@@ -81,10 +83,9 @@ class Game():
             # --- PROCESSING ---
             self.__player.move_x(keys_pressed)
             self.__player.apply_gravity()
-            
 
-            if keys_pressed[pygame.K_SPACE] == 1: # Shoot
-                self.__player.shoot() # Not created yet
+            for bullet in self.__player.get_bullet_list():
+                bullet.move()
             
             # --- Collisions ---
             for platform in self.__platform_list:
@@ -95,15 +96,6 @@ class Game():
                     elif self.__player.get_speed_y() < 0: # Player's head hit a platform
                         self.__player.set_pos(self.__player.get_pos()[0], platform.get_pos()[1] + platform.get_height())
                         self.__player.hit_head()
-
-            # Just for TestPlatform
-            # if self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()) is True:
-            #     if self.__player.get_speed_y() > 0: # Player landed on the platform
-            #         self.__player.set_pos(self.__player.get_pos()[0], TestPlatform.get_pos()[1] - self.__player.get_height())
-            #         self.__player.landed()
-            #     elif self.__player.get_speed_y() < 0: # Player's head hit a platform
-            #         self.__player.set_pos(self.__player.get_pos()[0], TestPlatform.get_pos()[1] + TestPlatform.get_height())
-            #         self.__player.hit_head()
 
 
             # --- Handle camera movement (make camera scroll according to how the player moves) ---
@@ -134,13 +126,13 @@ class Game():
             # This text below includes scrolling to help with testing purposes
             self.__window.get_surface().blit(title_text.get_surface(), (self.__window.get_width()/2 - title_text.get_width()/2 - scroll_x, self.__window.get_height()/2 - title_text.get_height()/2 - scroll_y))
 
+            for bullet in self.__player.get_bullet_list():
+                self.__window.get_surface().blit(bullet.get_surface(), (bullet.get_pos()[0] - scroll_x, bullet.get_pos()[1] - scroll_y))
+
             self.__window.get_surface().blit(self.__player.get_surface(), (self.__player.get_pos()[0] - scroll_x, self.__player.get_pos()[1] - scroll_y))
 
             for platform in self.__platform_list:
                 self.__window.get_surface().blit(platform.get_surface(), (platform.get_pos()[0] - scroll_x, platform.get_pos()[1] - scroll_y))
-
-            # Draw single platform
-            # self.__window.get_surface().blit(TestPlatform.get_surface(), (TestPlatform.get_pos()[0] - scroll_x, TestPlatform.get_pos()[1] - scroll_y))
 
 
             self.__window.update_frame()

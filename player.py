@@ -1,6 +1,7 @@
 
 import pygame
 from sprite import Sprite
+from bullet import Bullet
 
 class Player(Sprite):
     def __init__(self, lives, width, height, speed_x):
@@ -44,14 +45,14 @@ class Player(Sprite):
 
         if pressed_keys[pygame.K_d] == 1 or pressed_keys[pygame.K_RIGHT] == 1: # Move right
             x_pos += self.__speed_x
-            self.__direction = "right"
+            self.__direction_facing = "right"
             self.__moving_right = True
         else:
             self.__moving_right = False
 
         if pressed_keys[pygame.K_a] == 1 or pressed_keys[pygame.K_LEFT]: # Move left
             x_pos -= self.__speed_x
-            self.__direction = "left"
+            self.__direction_facing = "left"
             self.__moving_left = True
         else:
             self.__moving_left = False
@@ -65,7 +66,21 @@ class Player(Sprite):
         self.__speed_y = -self.__gravity_val*8
 
     def shoot(self):
-        pass
+        bullet_width = 40
+        bullet_height = 20
+
+        current_position = self.get_pos()
+        bullet_x = current_position[0] + (self.get_width()/2) - bullet_width/2
+        bullet_y = current_position[1] + (self.get_height()/2) - bullet_height/2
+
+        bullet = Bullet(bullet_x, bullet_y, bullet_width, bullet_height)
+
+        if self.__direction_facing == "left": # Shoot left
+            bullet.set_dir_x(-1)
+        elif self.__direction_facing == "right": # Shoot right
+            bullet.set_dir_x(1)
+
+        self.__bullet_list.append(bullet)
 
     def landed(self):
         self.__fall_count = 0
@@ -89,6 +104,9 @@ class Player(Sprite):
     
     def get_moving_left(self):
         return self.__moving_left
+    
+    def get_bullet_list(self):
+        return self.__bullet_list
 
 
 
