@@ -56,12 +56,30 @@ class Game():
         TestPlatform = Platform(350, 350, 100)
         TestPlatform.set_color((0, 255, 0))
 
-        self.__platform_list.append(TestPlatform)
-        self.__platform_list.append(Platform(320, 200, 50))
+        # self.__platform_list.append(TestPlatform)
+        # self.__platform_list.append(Platform(320, 200, 50))
 
         # floor = [Platform(i * 100, self.__window.get_height() - 100, 100)
         #      for i in range(-self.__window.get_width() // 100, (self.__window.get_width() * 2) // 100)]
         # self.__platform_list += floor
+
+        Map = [[0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], 
+           [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+           [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+           [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+        
+        Count = 0
+        for i in range(len(Map) - 1, -1, -1):
+            for j in range(len(Map[0])):
+                if Map[i][j] == 1:
+                    self.__platform_list.append(Platform(100*j, (100*Count*-1) + self.__window.get_height() - 100, 100))
+                    self.__platform_list[-1].set_color((0, 255, 0))
+            Count += 1
 
 
         while True:
@@ -107,7 +125,7 @@ class Game():
                         self.__player.set_pos(self.__player.get_pos()[0], platform.get_pos()[1] - self.__player.get_height())
                         self.__player.landed()
                     elif self.__player.get_speed_y() < 0: # Player's head hit a platform
-                        self.__player.set_pos(self.__player.get_pos()[0], platform.get_pos()[1] + platform.get_height())
+                        self.__player.set_pos(self.__player.get_pos()[0], platform.get_pos()[1] + platform.get_height() + 1)
                         self.__player.hit_head()
 
 
