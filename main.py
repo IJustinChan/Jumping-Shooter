@@ -118,9 +118,12 @@ class Game():
                         self.__player.remove_bullet(bullet)
                 
                 for platform in self.__platform_list:
-                    if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()):
-                        self.__player.remove_bullet(bullet)
-                        break
+                    try:
+                        if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()):
+                            self.__player.remove_bullet(bullet)
+                            break
+                    except:
+                        pass
   
             # --- Collisions ---
             for platform in self.__platform_list:
