@@ -14,10 +14,11 @@ class Player(Sprite):
         self.__fall_count = 0
         self.__hit = False
         self.__bullet_list = []
+        self.__num_jumps = 0
         self.__direction_facing = "right" # Allows us to determine which way to shoot the bullet
         self.__gravity_val = 1
 
-        # bool values to see if player is moving --> helps with camera movement
+        # bool values to see which direction player is moving --> helps with camera movement
         self.__moving_right = False
         self.__moving_left = False
 
@@ -63,7 +64,12 @@ class Player(Sprite):
         self.__lives -= 1
 
     def jump(self):
-        self.__speed_y = -self.__gravity_val*8
+        self.__num_jumps += 1
+        if self.__num_jumps == 1:
+            self.__fall_count = 0
+            self.__speed_y = -self.__gravity_val*8
+        elif self.__num_jumps == 2:
+            self.__speed_y = -self.__gravity_val*11
 
     def shoot(self):
         bullet_width = 40
@@ -86,6 +92,7 @@ class Player(Sprite):
     def landed(self):
         self.__fall_count = 0
         self.__speed_y = 0
+        self.__num_jumps = 0
 
     def hit_head(self):
         self.__speed_y *= -1
@@ -111,6 +118,9 @@ class Player(Sprite):
     
     def get_bullet_list(self):
         return self.__bullet_list
+
+    def get_num_jumps(self):
+        return self.__num_jumps
     
     
     

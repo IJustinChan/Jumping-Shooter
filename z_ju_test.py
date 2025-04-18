@@ -11,6 +11,11 @@
 # Draw single platform
 # self.__window.get_surface().blit(TestPlatform.get_surface(), (TestPlatform.get_pos()[0] - scroll_x, TestPlatform.get_pos()[1] - scroll_y))
 
+def jump(self):
+        self.__speed_y = -self.__gravity_val*8
+        self.__num_jumps += 1
+        if self.__num_jumps == 1:
+            self.__fall_count = 0
 
 
 

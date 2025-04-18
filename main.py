@@ -53,11 +53,15 @@ class Game():
         scroll_area_bottom = 100
         scroll_area_top = 150
 
-        TestPlatform = Platform(350, 400, 100)
+        TestPlatform = Platform(350, 350, 100)
         TestPlatform.set_color((0, 255, 0))
 
         self.__platform_list.append(TestPlatform)
         self.__platform_list.append(Platform(320, 200, 50))
+
+        # floor = [Platform(i * 100, self.__window.get_height() - 100, 100)
+        #      for i in range(-self.__window.get_width() // 100, (self.__window.get_width() * 2) // 100)]
+        # self.__platform_list += floor
 
 
         while True:
@@ -69,7 +73,7 @@ class Game():
                 
                 if event.type == pygame.KEYDOWN:
                     # --- PROCESSING ---
-                    if event.key == pygame.K_w or event.key == pygame.K_UP: # We will need to add extra condition if we are doing double jumps (check jump count)
+                    if (event.key == pygame.K_w or event.key == pygame.K_UP) and self.__player.get_num_jumps() < 2: # We will need to add extra condition if we are doing double jumps (check jump count)
                         self.__player.jump()
                     elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2: # Add this later to allow only a few bullets at a time
                         self.__player.shoot()
