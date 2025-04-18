@@ -73,9 +73,6 @@ class Game():
                         self.__player.jump()
                     elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2: # Add this later to allow only a few bullets at a time
                         self.__player.shoot()
-                        self.__player.bullet_length()
-                        
-
                     elif event.key == pygame.K_t: # For collision testing purposes
                         print(self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()))
                         print(self.__player.get_speed_y())
