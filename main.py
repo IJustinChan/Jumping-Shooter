@@ -71,8 +71,10 @@ class Game():
                     # --- PROCESSING ---
                     if event.key == pygame.K_w or event.key == pygame.K_UP: # We will need to add extra condition if we are doing double jumps (check jump count)
                         self.__player.jump()
-                    elif event.key == pygame.K_SPACE: # elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) <= 2: # Add this later to allow only a few bullets at a time
+                    elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2: # Add this later to allow only a few bullets at a time
                         self.__player.shoot()
+                        self.__player.bullet_length()
+                        
 
                     elif event.key == pygame.K_t: # For collision testing purposes
                         print(self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()))
@@ -86,7 +88,17 @@ class Game():
 
             for bullet in self.__player.get_bullet_list():
                 bullet.move()
-            
+                bullet_direction = bullet.get_dir_x()
+                bullet_position = bullet.get_pos()
+                bullet_x = bullet_position[0]
+                if bullet_direction == 1: # Bullet moving to the right
+                    if bullet_x > self.__window.get_width() + scroll_x:
+                        self.__player.remove_bullet(bullet)
+                elif bullet_direction == -1: # Bullet moving to the left
+                    if bullet_x < 0 + scroll_x - bullet.get_width():
+                        self.__player.remove_bullet(bullet)
+
+
             # --- Collisions ---
             for platform in self.__platform_list:
                 if self.__player.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:

@@ -74,6 +74,7 @@ class Player(Sprite):
         bullet_y = current_position[1] + (self.get_height()/2) - bullet_height/2
 
         bullet = Bullet(bullet_x, bullet_y, bullet_width, bullet_height)
+        bullet.set_color((255, 0, 0))
 
         if self.__direction_facing == "left": # Shoot left
             bullet.set_dir_x(-1)
@@ -88,6 +89,9 @@ class Player(Sprite):
 
     def hit_head(self):
         self.__speed_y *= -1
+
+    def remove_bullet(self, bullet):
+        self.__bullet_list.remove(bullet)
 
     # --- Accessors ---
     def get_lives(self):
@@ -107,6 +111,9 @@ class Player(Sprite):
     
     def get_bullet_list(self):
         return self.__bullet_list
+    
+    
+    
 
 
 
