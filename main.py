@@ -13,6 +13,13 @@ from player import Player
 from star import Star
 from text import Text
 
+def check_touching_platform(PLAYER, PLATFORM_LIST):
+    Collision = False
+    for platform in PLATFORM_LIST:
+        if PLAYER.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
+            Collision = True
+            break
+    return Collision
 
 class Game():
     def __init__(self):
@@ -67,7 +74,7 @@ class Game():
            [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], 
            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-           [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
            [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
            [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -91,13 +98,24 @@ class Game():
                 
                 if event.type == pygame.KEYDOWN:
                     # --- PROCESSING ---
-                    if (event.key == pygame.K_w or event.key == pygame.K_UP) and self.__player.get_num_jumps() < 2: # We will need to add extra condition if we are doing double jumps (check jump count)
-                        self.__player.jump()
+                    if event.key == pygame.K_w or event.key == pygame.K_UP:
+                        if self.__player.get_num_jumps() == 0: # Player is making their first jump
+                            # Ensure the player is on a platform for them to jump
+                            if check_touching_platform(self.__player, self.__platform_list) is True:
+                                self.__player.jump()
+                                
+                        elif self.__player.get_num_jumps() == 1: # Player is doing double jump
+                            self.__player.jump()
+
                     elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2: # Add this later to allow only a few bullets at a time
                         self.__player.shoot()
                     elif event.key == pygame.K_t: # For collision testing purposes
-                        print(self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()))
-                        print(self.__player.get_speed_y())
+                        # print(self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()))
+                        # print(self.__player.get_speed_y())
+                        if check_touching_platform(self.__player, self.__platform_list) is True:
+                            print(True)
+                        else:
+                            print(False)
 
             keys_pressed = pygame.key.get_pressed()
 
