@@ -116,8 +116,12 @@ class Game():
                 elif bullet_direction == -1: # Bullet moving to the left
                     if bullet_x < 0 + scroll_x - bullet.get_width():
                         self.__player.remove_bullet(bullet)
-
-
+                
+                for platform in self.__platform_list:
+                    if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()):
+                        self.__player.remove_bullet(bullet)
+                        break
+  
             # --- Collisions ---
             for platform in self.__platform_list:
                 if self.__player.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
