@@ -184,11 +184,9 @@ class Game():
 
             # --- PROCESSING ---
             if keys_pressed[pygame.K_d] == 1 or keys_pressed[pygame.K_RIGHT] == 1:
-                print(check_collide_right(self.__player, self.__platform_list, self.__player.get_speed_x()))
                 if check_collide_right(self.__player, self.__platform_list, self.__player.get_speed_x()) is False:
                     self.__player.move_x(keys_pressed)
             elif keys_pressed[pygame.K_a] == 1 or keys_pressed[pygame.K_LEFT] == 1:
-                print(check_collide_left(self.__player, self.__platform_list, self.__player.get_speed_x()))
                 if check_collide_left(self.__player, self.__platform_list, self.__player.get_speed_x()) is False:
                     self.__player.move_x(keys_pressed)
 
