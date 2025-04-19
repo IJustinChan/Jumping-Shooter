@@ -116,7 +116,7 @@ class Game():
 
         # --- Variables to control how the camera moves as the player moves ---
         scroll_x = 0
-        scroll_area_width = 100
+        scroll_area_width = 150
         scroll_y = 0
         scroll_area_bottom = 100
         scroll_area_top = 150
@@ -132,7 +132,7 @@ class Game():
         # self.__platform_list += floor
 
         Map = [[0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], 
            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
            [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
@@ -225,10 +225,10 @@ class Game():
 
 
             # --- Handle camera movement (make camera scroll according to how the player moves) ---
-            if (self.__player.get_pos()[0] + self.__player.get_width() - scroll_x >= self.__window.get_width() - scroll_area_width) and self.__player.get_moving_right() is True:
+            if (self.__player.get_pos()[0] + self.__player.get_width() - scroll_x >= self.__window.get_width() - scroll_area_width) and self.__player.get_moving_right() is True: # Right
                 scroll_x += self.__player.get_speed_x()
 
-            if (self.__player.get_pos()[0] - scroll_x <= scroll_area_width) and self.__player.get_moving_left() is True:
+            if (self.__player.get_pos()[0] - scroll_x <= scroll_area_width) and self.__player.get_moving_left() is True: # Left
                 scroll_x -= self.__player.get_speed_x()
 
             if (self.__player.get_pos()[1] - scroll_y <= scroll_area_top) and self.__player.get_speed_y() <= 0: # Player is jumping up
