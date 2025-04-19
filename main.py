@@ -14,12 +14,73 @@ from star import Star
 from text import Text
 
 def check_touching_platform(PLAYER, PLATFORM_LIST):
-    Collision = False
     for platform in PLATFORM_LIST:
         if PLAYER.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
-            Collision = True
-            break
-    return Collision
+            return True
+    return False
+
+def check_collide_right(PLAYER, PLATFORM_LIST, SPEED):
+    player_position = PLAYER.get_pos()
+    player_x = player_position[0]
+    player_y = player_position[1]
+    
+    new_top_right = (player_x + PLAYER.get_width() + SPEED, player_y)
+    new_bottom_right = (player_x + PLAYER.get_width() + SPEED, player_y + PLAYER.get_height())
+
+    new_top_left = (player_x + SPEED, player_y)
+    new_bottom_left = (player_x + SPEED, player_y + PLAYER.get_height())
+
+    for platform in PLATFORM_LIST:
+        platform_position = platform.get_pos()
+
+        platform_left_side = platform_position[0]
+        platform_right_side = platform_left_side + platform.get_width()
+        platform_top_side = platform_position[1]
+        platform_bottom_side = platform_top_side + platform.get_height()
+
+        if (new_top_left[0] >= platform_left_side and new_top_left[0] <= platform_right_side) and (new_top_left[1] >= platform_top_side and new_top_left[1] <= platform_bottom_side):
+            continue
+        if (new_bottom_left[0] >= platform_left_side and new_bottom_left[0] <= platform_right_side) and (new_bottom_left[1] >= platform_top_side and new_bottom_left[1] <= platform_bottom_side):
+            continue
+
+        if (new_top_right[0] >= platform_left_side and new_top_right[0] <= platform_right_side) and (new_top_right[1] > platform_top_side and new_top_right[1] < platform_bottom_side):
+            return True
+        if (new_bottom_right[0] >= platform_left_side and new_bottom_right[0] <= platform_right_side) and (new_bottom_right[1] > platform_top_side and new_bottom_right[1] < platform_bottom_side):
+            return True
+    return False
+    
+
+def check_collide_left(PLAYER, PLATFORM_LIST, SPEED):
+    player_position = PLAYER.get_pos()
+    player_x = player_position[0]
+    player_y = player_position[1]
+
+    new_top_left = (player_x - SPEED, player_y)
+    new_bottom_left = (player_x - SPEED, player_y + PLAYER.get_height())
+
+    new_top_right = (player_x - SPEED, player_y)
+    new_bottom_right = (player_x - SPEED, player_y + PLAYER.get_height())
+
+    for platform in PLATFORM_LIST:
+        platform_position = platform.get_pos()
+
+        platform_left_side = platform_position[0]
+        platform_right_side = platform_left_side + platform.get_width()
+        platform_top_side = platform_position[1]
+        platform_bottom_side = platform_top_side + platform.get_height()
+
+        if (new_top_right[0] <= platform_left_side and new_top_right[0] >= platform_right_side) and (new_top_right[1] >= platform_top_side and new_top_right[1] <= platform_bottom_side):
+            continue
+        if (new_bottom_right[0] <= platform_left_side and new_bottom_right[0] >= platform_right_side) and (new_bottom_right[1] >= platform_top_side and new_bottom_right[1] <= platform_bottom_side):
+            continue
+
+        if (new_top_left[0] <= platform_right_side and new_top_left[0] >= platform_right_side) and (new_top_left[1] > platform_top_side and new_top_left[1] <= platform_bottom_side):
+            return True
+        if (new_bottom_right[0] <= platform_right_side and new_bottom_left[0] >= platform_right_side) and (new_bottom_right[1] > platform_top_side and new_bottom_right[1] <= platform_bottom_side):
+            return True
+    return False
+
+
 
 class Game():
     def __init__(self):
@@ -51,7 +112,7 @@ class Game():
     def run(self):
         title_text = Text("Jumping Shooter", "Arial", 36)
 
-        self.__player.set_pos(400, 200)
+        self.__player.set_pos(0, 200)
 
         # --- Variables to control how the camera moves as the player moves ---
         scroll_x = 0
@@ -103,7 +164,7 @@ class Game():
                             # Ensure the player is on a platform for them to jump
                             if check_touching_platform(self.__player, self.__platform_list) is True:
                                 self.__player.jump()
-                                
+
                         elif self.__player.get_num_jumps() == 1: # Player is doing double jump
                             self.__player.jump()
 
@@ -112,15 +173,25 @@ class Game():
                     elif event.key == pygame.K_t: # For collision testing purposes
                         # print(self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()))
                         # print(self.__player.get_speed_y())
-                        if check_touching_platform(self.__player, self.__platform_list) is True:
-                            print(True)
-                        else:
-                            print(False)
+                        # if check_touching_platform(self.__player, self.__platform_list) is True:
+                        #     print(True)
+                        # else:
+                        #     print(False)
+                        pass
+                                
 
             keys_pressed = pygame.key.get_pressed()
 
             # --- PROCESSING ---
-            self.__player.move_x(keys_pressed)
+            if keys_pressed[pygame.K_d] == 1 or keys_pressed[pygame.K_RIGHT] == 1:
+                print(check_collide_right(self.__player, self.__platform_list, self.__player.get_speed_x()))
+                if check_collide_right(self.__player, self.__platform_list, self.__player.get_speed_x()) is False:
+                    self.__player.move_x(keys_pressed)
+            elif keys_pressed[pygame.K_a] == 1 or keys_pressed[pygame.K_LEFT] == 1:
+                print(check_collide_left(self.__player, self.__platform_list, self.__player.get_speed_x()))
+                if check_collide_left(self.__player, self.__platform_list, self.__player.get_speed_x()) is False:
+                    self.__player.move_x(keys_pressed)
+
             self.__player.apply_gravity()
 
             for bullet in self.__player.get_bullet_list():
@@ -146,6 +217,7 @@ class Game():
             # --- Collisions ---
             for platform in self.__platform_list:
                 if self.__player.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
+                    # check_collision_side(self.__player, platform)
                     if self.__player.get_speed_y() > 0: # Player landed on the platform
                         self.__player.set_pos(self.__player.get_pos()[0], platform.get_pos()[1] - self.__player.get_height())
                         self.__player.landed()
