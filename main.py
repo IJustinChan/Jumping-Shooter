@@ -111,6 +111,8 @@ class Game():
     # --- Main program code ---
     def run(self):
         title_text = Text("Jumping Shooter", "Arial", 36)
+        black_heading = Player(0, self.__window.get_width(), 75, 0)
+        black_heading.set_color((0, 0, 0))
 
         self.__player.set_pos(0, 200)
 
@@ -119,7 +121,7 @@ class Game():
         scroll_area_width = 150
         scroll_y = 0
         scroll_area_bottom = 100
-        scroll_area_top = 150
+        scroll_area_top = 225
 
         TestPlatform = Platform(350, 350, 100)
         TestPlatform.set_color((0, 255, 0))
@@ -259,6 +261,8 @@ class Game():
 
             for platform in self.__platform_list:
                 self.__window.get_surface().blit(platform.get_surface(), (platform.get_pos()[0] - scroll_x, platform.get_pos()[1] - scroll_y))
+            
+            self.__window.get_surface().blit(black_heading.get_surface(), black_heading.get_pos())
 
 
             self.__window.update_frame()
