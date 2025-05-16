@@ -90,6 +90,7 @@ class Game():
         self.__enemy_list = []
         self.__platform_list = []
         self.__star_list = []
+        self.__stars_collected = 0
 
     def __setup(self):
         pass
@@ -113,6 +114,10 @@ class Game():
         title_text = Text("Jumping Shooter", "Arial", 36)
         black_heading = Player(0, self.__window.get_width(), 75, 0)
         black_heading.set_color((0, 0, 0))
+
+        player_lives_text = Text(f"Lives: {self.__player.get_lives()}", "Arial")
+        level_text = Text(f"Level: {self.__level}", "Arial", 36, 150, 0)
+        stars_text = Text(f"Stars Collected: {self.__stars_collected}", "Arial", 36, 300, 0)
 
         self.__player.set_pos(0, 200)
 
@@ -263,6 +268,9 @@ class Game():
                 self.__window.get_surface().blit(platform.get_surface(), (platform.get_pos()[0] - scroll_x, platform.get_pos()[1] - scroll_y))
             
             self.__window.get_surface().blit(black_heading.get_surface(), black_heading.get_pos())
+            self.__window.get_surface().blit(player_lives_text.get_surface(), player_lives_text.get_pos())
+            self.__window.get_surface().blit(level_text.get_surface(), level_text.get_pos())
+            self.__window.get_surface().blit(stars_text.get_surface(), stars_text.get_pos())
 
 
             self.__window.update_frame()
