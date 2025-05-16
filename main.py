@@ -115,6 +115,9 @@ class Game():
         black_heading = Player(0, self.__window.get_width(), 75, 0)
         black_heading.set_color((0, 0, 0))
 
+        star1 = Star(70, 300, 20, 20)
+        self.__star_list.append(star1)
+
         player_lives_text = Text(f"Lives: {self.__player.get_lives()}", "Arial")
         level_text = Text(f"Level: {self.__level}", "Arial", 36, 150, 0)
         stars_text = Text(f"Stars Collected: {self.__stars_collected}", "Arial", 36, 300, 0)
@@ -229,6 +232,12 @@ class Game():
                     elif self.__player.get_speed_y() < 0: # Player's head hit a platform
                         self.__player.set_pos(self.__player.get_pos()[0], platform.get_pos()[1] + platform.get_height() + 1)
                         self.__player.hit_head()
+            
+            for star in self.__star_list:
+                if self.__player.check_collision(star.get_width(), star.get_height(), star.get_pos()) is True:
+                    self.__stars_collected += 1
+                    stars_text.update_text(f"Stars Collected: {self.__stars_collected}")
+                    self.__star_list.remove(star)
 
 
             # --- Handle camera movement (make camera scroll according to how the player moves) ---
@@ -262,8 +271,7 @@ class Game():
             for bullet in self.__player.get_bullet_list():
                 self.__window.get_surface().blit(bullet.get_surface(), (bullet.get_pos()[0] - scroll_x, bullet.get_pos()[1] - scroll_y))
 
-            self.__window.get_surface().blit(self.__player.get_surface(), (self.__player.get_pos()[0] - scroll_x, self.__player.get_pos()[1] - scroll_y))
-
+            
             for platform in self.__platform_list:
                 self.__window.get_surface().blit(platform.get_surface(), (platform.get_pos()[0] - scroll_x, platform.get_pos()[1] - scroll_y))
             
@@ -271,6 +279,12 @@ class Game():
             self.__window.get_surface().blit(player_lives_text.get_surface(), player_lives_text.get_pos())
             self.__window.get_surface().blit(level_text.get_surface(), level_text.get_pos())
             self.__window.get_surface().blit(stars_text.get_surface(), stars_text.get_pos())
+
+            for star in self.__star_list:
+                self.__window.get_surface().blit(star.get_surface(), (star.get_pos()[0] - scroll_x, star.get_pos()[1] - scroll_y))
+
+
+            self.__window.get_surface().blit(self.__player.get_surface(), (self.__player.get_pos()[0] - scroll_x, self.__player.get_pos()[1] - scroll_y))
 
 
             self.__window.update_frame()
