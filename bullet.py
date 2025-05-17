@@ -3,7 +3,7 @@ import pygame
 from sprite import Sprite
 
 class Bullet(Sprite):
-    def __init__(self, x, y, width, height, speed=10):
+    def __init__(self, x, y, width, height, speed=9):
         Sprite.__init__(self, x=x, y=y, width=width, height=height, speed=speed)
         self._SURFACE = pygame.Surface(self._dim, pygame.SRCALPHA, 32)
         self._SURFACE.fill(self._color)

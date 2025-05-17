@@ -8,7 +8,7 @@ class Enemy(Sprite):
         Sprite.__init__(self, x=x, y=y, width=width, height=height)
         self._SURFACE = pygame.Surface(self._dim, pygame.SRCALPHA, 32)
         self._SURFACE.fill(self._color)
-        self.__lives == lives
+        self.__lives = lives
         self.__bullet_list = []
 
     # --- Methods ---
@@ -36,6 +36,39 @@ class Enemy(Sprite):
             bullet.set_dir_x(1)
 
         self.__bullet_list.append(bullet)
+
+    def detect_player(self, player_pos, player_height):
+
+        player_x = player_pos[0]
+        player_y = player_pos[1]
+
+        enemy_pos = self.get_pos()
+        enemy_x = enemy_pos[0]
+        enemy_y = enemy_pos[1]
+
+        see_player = False
+        direction = None
+
+        # Check to see if the player is on the same horizontal as the enemy (y-vertices between enemy's y-vertices)
+        if (player_y >= enemy_y and player_y <= enemy_y + self.get_height()) or (player_y + player_height >= enemy_y and player_y + player_height <= enemy_y + self.get_height()):
+            # Make sure the player is at a reasonable distance from the enemy
+            x_distance = abs(enemy_x - player_x)
+            # print(x_distance)
+            if x_distance <= 600:
+                see_player = True
+                if player_x <= enemy_x:
+                    direction = "left"
+                else:
+                    direction = "right"
+                return see_player, direction
+            else:
+                see_player = False
+                return see_player, direction
+            
+        # x_distance = abs(enemy_x - player_x)
+        # print(x_distance)
+        return see_player, direction
+
 
     def lose_lives(self):
         self.__lives -= 1
