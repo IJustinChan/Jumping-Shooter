@@ -159,6 +159,10 @@ class Game():
                 if Map[i][j] == 1:
                     self.__platform_list.append(Platform(100*j, (100*Count*-1) + self.__window.get_height() - 100, 100))
                     self.__platform_list[-1].set_color((0, 255, 0))
+                elif Map[i][j] == 9:
+                    self.__player.set_pos(100*j, (100*Count*-1) + self.__window.get_height() - 100)
+                elif Map[i][j] == 3:
+                    self.__star_list.append(Star(100*j, (100*Count*-1) + self.__window.get_height() - 100, 20, 20))
             Count += 1
 
 
