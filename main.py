@@ -193,6 +193,7 @@ class Game():
                         #     print(True)
                         # else:
                         #     print(False)
+                        print(self.__player.get_pos())
                         see_player, direction = test_enemy.detect_player(self.__player.get_pos(), self.__player.get_height())
                         print(see_player)
                         print(direction)
@@ -233,6 +234,13 @@ class Game():
                             break
                     except:
                         pass
+
+            # Check if the player fell down the map
+            if self.__player.get_pos()[1] > self.__window.get_height() + 450: # Player dead
+                # Respawn the player somewhere
+                self.__player.set_pos(0, 200)
+                scroll_x = 0
+                scroll_y = 0
   
             # --- Collisions ---
             for platform in self.__platform_list:
