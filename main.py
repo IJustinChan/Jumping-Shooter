@@ -278,7 +278,7 @@ class Game():
                         enemy.remove_bullet(bullet)
 
             # Check if the player fell down the map
-            if self.__player.get_pos()[1] > self.__window.get_height() + 450: # Player dead
+            if self.__player.get_pos()[1] > self.__window.get_height() + 1300: # Player dead
                 # Respawn the player somewhere
                 self.__player.set_pos(0, 200)
                 scroll_x = 0
