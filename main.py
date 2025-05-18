@@ -124,11 +124,6 @@ class Game():
 
         self.__player.set_pos(0, 200)
 
-        test_enemy = Enemy(600, 350, 50, 50, 1)
-
-        #### Create sample enemies
-        #self.__enemy_list.append(Enemy(500, 300, 60, 60, 1))
-
         # --- Variables to control how the camera moves as the player moves ---
         scroll_x = 0
         scroll_area_width = 150
@@ -222,15 +217,14 @@ class Game():
                         #     print(True)
                         # else:
                         #     print(False)
-                        print(self.__player.get_pos())
-                        see_player, direction = test_enemy.detect_player(self.__player.get_pos(), self.__player.get_height())
-                        print(see_player)
-                        print(direction)
-                        if see_player is True:
-                            test_enemy.shoot(direction)
-            
-            for bullet in test_enemy.get_bullet_list():
-                bullet.move()
+
+                        # print(self.__player.get_pos())
+                        # see_player, direction = test_enemy.detect_player(self.__player.get_pos(), self.__player.get_height())
+                        # print(see_player)
+                        # print(direction)
+                        # if see_player is True:
+                        #     test_enemy.shoot(direction)
+                        pass
 
             keys_pressed = pygame.key.get_pressed()
 
@@ -320,6 +314,14 @@ class Game():
                     for platform in self.__platform_list:
                         if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
                             enemy.remove_bullet(bullet)
+
+            # Traverse the list backwards to make deletion easier
+            for bullet in reversed(self.__player.get_bullet_list()):
+                for enemy in self.__enemy_list:
+                    if bullet.check_collision(enemy.get_width(), enemy.get_height(), enemy.get_pos()) is True:
+                        self.__player.remove_bullet(bullet)
+                        self.__enemy_list.remove(enemy)
+                        break
             
 
             # --- Update texts ---
@@ -372,11 +374,6 @@ class Game():
             self.__window.get_surface().blit(player_lives_text.get_surface(), player_lives_text.get_pos())
             self.__window.get_surface().blit(level_text.get_surface(), level_text.get_pos())
             self.__window.get_surface().blit(stars_text.get_surface(), stars_text.get_pos())
-
-            # Test enemy
-            self.__window.get_surface().blit(test_enemy.get_surface(), (test_enemy.get_pos()[0] - scroll_x, test_enemy.get_pos()[1] - scroll_y))
-            for bullet in test_enemy.get_bullet_list():
-                self.__window.get_surface().blit(bullet.get_surface(), (bullet.get_pos()[0] - scroll_x, bullet.get_pos()[1] - scroll_y))
 
             for star in self.__star_list:
                 self.__window.get_surface().blit(star.get_surface(), (star.get_pos()[0] - scroll_x, star.get_pos()[1] - scroll_y))
