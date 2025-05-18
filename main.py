@@ -285,6 +285,7 @@ class Game():
                 self.__player.set_pos(0, 200)
                 scroll_x = 0
                 scroll_y = 0
+                self.__player.lose_life()
   
             # --- Collisions ---
             for platform in self.__platform_list:
@@ -313,6 +314,12 @@ class Game():
                 if self.__player.check_collision(enemy.get_width(), enemy.get_height(), enemy.get_pos()) is True:
                     self.__enemy_list.remove(enemy)
                     self.__player.lose_life()
+            
+            for enemy in self.__enemy_list:
+                for bullet in enemy.get_bullet_list():
+                    for platform in self.__platform_list:
+                        if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
+                            enemy.remove_bullet(bullet)
             
 
             # --- Update texts ---
