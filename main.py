@@ -211,7 +211,7 @@ class Game():
                         elif self.__player.get_num_jumps() == 1: # Player is doing double jump
                             self.__player.jump()
 
-                    elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2: # Add this later to allow only a few bullets at a time
+                    elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2:
                         self.__player.shoot()
                     elif event.key == pygame.K_t: # For collision testing purposes
                         # print(self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()))
@@ -265,7 +265,7 @@ class Game():
             for enemy in self.__enemy_list:
                 see_player, shooting_direction = enemy.detect_player(self.__player.get_pos(), self.__player.get_height())
                 if see_player is True:
-                    if len(enemy.get_bullet_list()) < 2:
+                    if len(enemy.get_bullet_list()) < 1:
                         enemy.shoot(shooting_direction)
                 
                 for bullet in enemy.get_bullet_list():
@@ -300,6 +300,21 @@ class Game():
                     self.__stars_collected += 1
                     stars_text.update_text(f"Stars Collected: {self.__stars_collected}")
                     self.__star_list.remove(star)
+            
+            for enemy in self.__enemy_list:
+                for bullet in enemy.get_bullet_list():
+                    if self.__player.check_collision(bullet.get_width(), bullet.get_height(), bullet.get_pos()) is True:
+                        enemy.remove_bullet(bullet)
+                        self.__player.lose_life()
+
+            for enemy in self.__enemy_list:
+                if self.__player.check_collision(enemy.get_width(), enemy.get_height(), enemy.get_pos()) is True:
+                    self.__enemy_list.remove(enemy)
+                    self.__player.lose_life()
+            
+
+            # --- Update texts ---
+            player_lives_text.update_text(f"Lives: {self.__player.get_lives()}")
 
 
             # --- Handle camera movement (make camera scroll according to how the player moves) ---
