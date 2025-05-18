@@ -126,6 +126,9 @@ class Game():
 
         test_enemy = Enemy(600, 350, 50, 50, 1)
 
+        #### Create sample enemies
+        self.__enemy_list.append(Enemy(500, 300, 60, 60, 1))
+
         # --- Variables to control how the camera moves as the player moves ---
         scroll_x = 0
         scroll_area_width = 150
@@ -258,6 +261,21 @@ class Game():
                             break
                     except:
                         pass
+            
+            for enemy in self.__enemy_list:
+                see_player, shooting_direction = enemy.detect_player(self.__player.get_pos(), self.__player.get_height())
+                if see_player is True:
+                    if len(enemy.get_bullet_list()) < 2:
+                        enemy.shoot(shooting_direction)
+                
+                for bullet in enemy.get_bullet_list():
+                    bullet.move()
+
+                    enemy_bullet_x = bullet.get_pos()[0]
+                    player_x = self.__player.get_pos()[0]
+                    distance = abs(enemy_bullet_x - player_x)
+                    if distance > 700:
+                        enemy.remove_bullet(bullet)
 
             # Check if the player fell down the map
             if self.__player.get_pos()[1] > self.__window.get_height() + 450: # Player dead
@@ -318,6 +336,13 @@ class Game():
             
             for platform in self.__platform_list:
                 self.__window.get_surface().blit(platform.get_surface(), (platform.get_pos()[0] - scroll_x, platform.get_pos()[1] - scroll_y))
+            
+            for enemy in self.__enemy_list:
+                for bullet in enemy.get_bullet_list():
+                    self.__window.get_surface().blit(bullet.get_surface(), (bullet.get_pos()[0] - scroll_x, bullet.get_pos()[1] - scroll_y))
+
+            for enemy in self.__enemy_list:
+                self.__window.get_surface().blit(enemy.get_surface(), (enemy.get_pos()[0] - scroll_x, enemy.get_pos()[1] - scroll_y))
             
             self.__window.get_surface().blit(black_heading.get_surface(), black_heading.get_pos())
             self.__window.get_surface().blit(player_lives_text.get_surface(), player_lives_text.get_pos())

@@ -8,6 +8,7 @@ class Enemy(Sprite):
         Sprite.__init__(self, x=x, y=y, width=width, height=height)
         self._SURFACE = pygame.Surface(self._dim, pygame.SRCALPHA, 32)
         self._SURFACE.fill(self._color)
+        self.set_color((0, 0, 0))
         self.__lives = lives
         self.__bullet_list = []
 
@@ -69,9 +70,11 @@ class Enemy(Sprite):
         # print(x_distance)
         return see_player, direction
 
-
     def lose_lives(self):
         self.__lives -= 1
+    
+    def remove_bullet(self, bullet):
+        self.__bullet_list.remove(bullet)
 
     # --- Accessors ---
     def get_lives(self):
