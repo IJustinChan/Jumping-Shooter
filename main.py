@@ -153,7 +153,7 @@ class Game():
         
         Map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0],
@@ -244,10 +244,10 @@ class Game():
                 bullet_position = bullet.get_pos()
                 bullet_x = bullet_position[0]
                 if bullet_direction == 1: # Bullet moving to the right
-                    if bullet_x > self.__window.get_width() + scroll_x:
+                    if bullet_x > self.__window.get_width() + scroll_x + 150:
                         self.__player.remove_bullet(bullet)
                 elif bullet_direction == -1: # Bullet moving to the left
-                    if bullet_x < 0 + scroll_x - bullet.get_width():
+                    if bullet_x < 0 + scroll_x - bullet.get_width() - 150:
                         self.__player.remove_bullet(bullet)
                 
                 for platform in self.__platform_list:
