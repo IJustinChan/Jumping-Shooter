@@ -126,9 +126,9 @@ class Game():
 
         # --- Variables to control how the camera moves as the player moves ---
         scroll_x = 0
-        scroll_area_width = 150
+        scroll_area_width = 180
         scroll_y = 0
-        scroll_area_bottom = 100
+        scroll_area_bottom = 150
         scroll_area_top = 225
 
         TestPlatform = Platform(350, 350, 100)
@@ -161,7 +161,7 @@ class Game():
            [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
            [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-           [0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 3],
+           [0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 1, 0, 3, 0, 0, 0, 0, 3],
            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -370,13 +370,13 @@ class Game():
             for enemy in self.__enemy_list:
                 self.__window.get_surface().blit(enemy.get_surface(), (enemy.get_pos()[0] - scroll_x, enemy.get_pos()[1] - scroll_y))
             
+            for star in self.__star_list:
+                self.__window.get_surface().blit(star.get_surface(), (star.get_pos()[0] - scroll_x, star.get_pos()[1] - scroll_y))
+            
             self.__window.get_surface().blit(black_heading.get_surface(), black_heading.get_pos())
             self.__window.get_surface().blit(player_lives_text.get_surface(), player_lives_text.get_pos())
             self.__window.get_surface().blit(level_text.get_surface(), level_text.get_pos())
             self.__window.get_surface().blit(stars_text.get_surface(), stars_text.get_pos())
-
-            for star in self.__star_list:
-                self.__window.get_surface().blit(star.get_surface(), (star.get_pos()[0] - scroll_x, star.get_pos()[1] - scroll_y))
 
 
             self.__window.get_surface().blit(self.__player.get_surface(), (self.__player.get_pos()[0] - scroll_x, self.__player.get_pos()[1] - scroll_y))
