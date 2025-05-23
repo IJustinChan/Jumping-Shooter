@@ -122,13 +122,13 @@ class Game():
         level_text = Text(f"Level: {self.__level}", "Arial", 36, 150, 0)
         stars_text = Text(f"Stars Collected: {self.__stars_collected}", "Arial", 36, 300, 0)
 
-        #self.__player.set_pos(0, 200)
+        self.__player.set_pos(0, 200)
 
         # --- Variables to control how the camera moves as the player moves ---
         scroll_x = 0
-        scroll_area_width = 150
+        scroll_area_width = 180
         scroll_y = 0
-        scroll_area_bottom = 180
+        scroll_area_bottom = 150
         scroll_area_top = 225
 
         TestPlatform = Platform(350, 350, 100)
@@ -142,29 +142,63 @@ class Game():
         # self.__platform_list += floor
 
         Map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 3],
+           [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
+           [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0],
+           [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+           [0, 1, 0, 0, 0, 0, 2, 0, 2, 0, 3, 0, 2, 0, 0, 2, 0, 0],
+           [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0]]
+
+        Map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+           [0, 0, 0, 0, 0, 2, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
            [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+           [0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
            [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-           [0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 3],
+           [0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 1, 0, 3, 0, 0, 0, 0, 3],
            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], 
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 1, 0, 0, 0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [9, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        
+
+        Map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+               [2, 0, 0, 0, 2, 2, 2, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+               [1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0],
+               [0, 1, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0],
+               [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+               [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         # [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        
+
         Count = 0
         for i in range(len(Map) - 1, -1, -1):
             for j in range(len(Map[0])):
@@ -175,6 +209,8 @@ class Game():
                     self.__player.set_pos(100*j, (100*Count*-1) + self.__window.get_height() - 100)
                 elif Map[i][j] == 3:
                     self.__star_list.append(Star(100*j, (100*Count*-1) + self.__window.get_height() - 100, 20, 20))
+                elif Map[i][j] == 2:
+                    self.__enemy_list.append(Enemy(100*j + 25, (100*Count*-1) + self.__window.get_height() - 100+50, 50, 50, 1))
             Count += 1
 
 
@@ -184,7 +220,7 @@ class Game():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-                
+
                 if event.type == pygame.KEYDOWN:
                     # --- PROCESSING ---
                     if event.key == pygame.K_w or event.key == pygame.K_UP:
@@ -196,7 +232,7 @@ class Game():
                         elif self.__player.get_num_jumps() == 1: # Player is doing double jump
                             self.__player.jump()
 
-                    elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2: # Add this later to allow only a few bullets at a time
+                    elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2:
                         self.__player.shoot()
                     elif event.key == pygame.K_t: # For collision testing purposes
                         # print(self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()))
@@ -205,8 +241,14 @@ class Game():
                         #     print(True)
                         # else:
                         #     print(False)
+
+                        # print(self.__player.get_pos())
+                        # see_player, direction = test_enemy.detect_player(self.__player.get_pos(), self.__player.get_height())
+                        # print(see_player)
+                        # print(direction)
+                        # if see_player is True:
+                        #     test_enemy.shoot(direction)
                         pass
-                                
 
             keys_pressed = pygame.key.get_pressed()
 
@@ -226,12 +268,12 @@ class Game():
                 bullet_position = bullet.get_pos()
                 bullet_x = bullet_position[0]
                 if bullet_direction == 1: # Bullet moving to the right
-                    if bullet_x > self.__window.get_width() + scroll_x:
+                    if bullet_x > self.__window.get_width() + scroll_x + 150:
                         self.__player.remove_bullet(bullet)
                 elif bullet_direction == -1: # Bullet moving to the left
-                    if bullet_x < 0 + scroll_x - bullet.get_width():
+                    if bullet_x < 0 + scroll_x - bullet.get_width() - 150:
                         self.__player.remove_bullet(bullet)
-                
+
                 for platform in self.__platform_list:
                     try:
                         if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()):
@@ -239,7 +281,30 @@ class Game():
                             break
                     except:
                         pass
-  
+
+            for enemy in self.__enemy_list:
+                see_player, shooting_direction = enemy.detect_player(self.__player.get_pos(), self.__player.get_height())
+                if see_player is True:
+                    if len(enemy.get_bullet_list()) < 1:
+                        enemy.shoot(shooting_direction)
+
+                for bullet in enemy.get_bullet_list():
+                    bullet.move()
+
+                    enemy_bullet_x = bullet.get_pos()[0]
+                    player_x = self.__player.get_pos()[0]
+                    distance = abs(enemy_bullet_x - player_x)
+                    if distance > 700:
+                        enemy.remove_bullet(bullet)
+
+            # Check if the player fell down the map
+            if self.__player.get_pos()[1] > self.__window.get_height() + 1300: # Player dead
+                # Respawn the player somewhere
+                self.__player.set_pos(0, 200)
+                scroll_x = 0
+                scroll_y = 0
+                self.__player.lose_life()
+
             # --- Collisions ---
             for platform in self.__platform_list:
                 if self.__player.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
@@ -250,12 +315,41 @@ class Game():
                     elif self.__player.get_speed_y() < 0: # Player's head hit a platform
                         self.__player.set_pos(self.__player.get_pos()[0], platform.get_pos()[1] + platform.get_height() + 1)
                         self.__player.hit_head()
-            
+
             for star in self.__star_list:
                 if self.__player.check_collision(star.get_width(), star.get_height(), star.get_pos()) is True:
                     self.__stars_collected += 1
                     stars_text.update_text(f"Stars Collected: {self.__stars_collected}")
                     self.__star_list.remove(star)
+
+            for enemy in self.__enemy_list:
+                for bullet in enemy.get_bullet_list():
+                    if self.__player.check_collision(bullet.get_width(), bullet.get_height(), bullet.get_pos()) is True:
+                        enemy.remove_bullet(bullet)
+                        self.__player.lose_life()
+
+            for enemy in self.__enemy_list:
+                if self.__player.check_collision(enemy.get_width(), enemy.get_height(), enemy.get_pos()) is True:
+                    self.__enemy_list.remove(enemy)
+                    self.__player.lose_life()
+
+            for enemy in self.__enemy_list:
+                for bullet in enemy.get_bullet_list():
+                    for platform in self.__platform_list:
+                        if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
+                            enemy.remove_bullet(bullet)
+
+            # Traverse the list backwards to make deletion easier
+            for bullet in reversed(self.__player.get_bullet_list()):
+                for enemy in self.__enemy_list:
+                    if bullet.check_collision(enemy.get_width(), enemy.get_height(), enemy.get_pos()) is True:
+                        self.__player.remove_bullet(bullet)
+                        self.__enemy_list.remove(enemy)
+                        break
+
+
+            # --- Update texts ---
+            player_lives_text.update_text(f"Lives: {self.__player.get_lives()}")
 
 
             # --- Handle camera movement (make camera scroll according to how the player moves) ---
@@ -289,17 +383,24 @@ class Game():
             for bullet in self.__player.get_bullet_list():
                 self.__window.get_surface().blit(bullet.get_surface(), (bullet.get_pos()[0] - scroll_x, bullet.get_pos()[1] - scroll_y))
 
-            
+
             for platform in self.__platform_list:
                 self.__window.get_surface().blit(platform.get_surface(), (platform.get_pos()[0] - scroll_x, platform.get_pos()[1] - scroll_y))
-            
+
+            for enemy in self.__enemy_list:
+                for bullet in enemy.get_bullet_list():
+                    self.__window.get_surface().blit(bullet.get_surface(), (bullet.get_pos()[0] - scroll_x, bullet.get_pos()[1] - scroll_y))
+
+            for enemy in self.__enemy_list:
+                self.__window.get_surface().blit(enemy.get_surface(), (enemy.get_pos()[0] - scroll_x, enemy.get_pos()[1] - scroll_y))
+
+            for star in self.__star_list:
+                self.__window.get_surface().blit(star.get_surface(), (star.get_pos()[0] - scroll_x, star.get_pos()[1] - scroll_y))
+
             self.__window.get_surface().blit(black_heading.get_surface(), black_heading.get_pos())
             self.__window.get_surface().blit(player_lives_text.get_surface(), player_lives_text.get_pos())
             self.__window.get_surface().blit(level_text.get_surface(), level_text.get_pos())
             self.__window.get_surface().blit(stars_text.get_surface(), stars_text.get_pos())
-
-            for star in self.__star_list:
-                self.__window.get_surface().blit(star.get_surface(), (star.get_pos()[0] - scroll_x, star.get_pos()[1] - scroll_y))
 
 
             self.__window.get_surface().blit(self.__player.get_surface(), (self.__player.get_pos()[0] - scroll_x, self.__player.get_pos()[1] - scroll_y))
@@ -312,5 +413,3 @@ if __name__ == "__main__":
     GAME = Game()
     GAME.create_texts()
     GAME.run()
-
-
