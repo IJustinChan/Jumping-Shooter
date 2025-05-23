@@ -12,6 +12,7 @@ from platforms import Platform
 from player import Player
 from star import Star
 from text import Text
+import levels
 
 def check_touching_platform(PLAYER, PLATFORM_LIST):
     for platform in PLATFORM_LIST:
@@ -91,9 +92,14 @@ class Game():
         self.__platform_list = []
         self.__star_list = []
         self.__stars_collected = 0
+        self.__all_levels = None
+        self.__all_extra_platforms = None
 
     def __setup(self):
-        pass
+        all_levels_dict, all_platforms_dict = levels.get_levels_data()
+        self.__all_levels = all_levels_dict
+        self.__all_extra_platforms = all_platforms_dict
+
 
     def next_level(self):
         pass
@@ -115,9 +121,6 @@ class Game():
         black_heading = Player(0, self.__window.get_width(), 75, 0)
         black_heading.set_color((0, 0, 0))
 
-        # star1 = Star(70, 300, 20, 20)
-        # self.__star_list.append(star1)
-
         player_lives_text = Text(f"Lives: {self.__player.get_lives()}", "Arial")
         level_text = Text(f"Level: {self.__level}", "Arial", 36, 150, 0)
         stars_text = Text(f"Stars Collected: {self.__stars_collected}", "Arial", 36, 300, 0)
@@ -130,12 +133,6 @@ class Game():
         scroll_y = 0
         scroll_area_bottom = 150
         scroll_area_top = 225
-
-        TestPlatform = Platform(350, 350, 100)
-        TestPlatform.set_color((0, 255, 0))
-
-        # self.__platform_list.append(TestPlatform)
-        # self.__platform_list.append(Platform(320, 200, 50))
 
         # floor = [Platform(i * 100, self.__window.get_height() - 100, 100)
         #      for i in range(-self.__window.get_width() // 100, (self.__window.get_width() * 2) // 100)]
@@ -214,19 +211,6 @@ class Game():
                     elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2:
                         self.__player.shoot()
                     elif event.key == pygame.K_t: # For collision testing purposes
-                        # print(self.__player.check_collision(TestPlatform.get_width(), TestPlatform.get_height(), TestPlatform.get_pos()))
-                        # print(self.__player.get_speed_y())
-                        # if check_touching_platform(self.__player, self.__platform_list) is True:
-                        #     print(True)
-                        # else:
-                        #     print(False)
-
-                        # print(self.__player.get_pos())
-                        # see_player, direction = test_enemy.detect_player(self.__player.get_pos(), self.__player.get_height())
-                        # print(see_player)
-                        # print(direction)
-                        # if see_player is True:
-                        #     test_enemy.shoot(direction)
                         pass
 
             keys_pressed = pygame.key.get_pressed()
