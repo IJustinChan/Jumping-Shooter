@@ -115,7 +115,7 @@ class Game():
         self.__enemy_list = []
         self.__star_list = []
 
-    def create_level(self, MAP, EXTRA_PLATFORMS):
+    def create_level(self, MAP, EXTRA_PLATFORMS, ENEMY_COLORS):
         PLATFORM_LIST = []
         ENEMY_LIST = []
         STARS_LIST = []
@@ -135,8 +135,12 @@ class Game():
                     STARS_LIST.append(Star(100*j, (100*Count*-1) + self.__window.get_height() - 100, 20, 20))
                 elif MAP[i][j] == 2:
                     ENEMY_LIST.append(Enemy(100*j + 25, (100*Count*-1) + self.__window.get_height() - 100+50, 50, 50, 1))
+                    ENEMY_LIST[-1].set_color(ENEMY_COLORS[1])
                 elif MAP[i][j] == 4:
                     portal_obj = Portal(100*j + 10, (100*Count*-1) + self.__window.get_height() - 100 + 20, 80, 80)
+                elif MAP[i][j] == 5:
+                    ENEMY_LIST.append(Enemy(100*j + 25, (100*Count*-1) + self.__window.get_height() - 100+50, 50, 50, 2))
+                    ENEMY_LIST[-1].set_color(ENEMY_COLORS[2])
             Count += 1
 
         for platform in EXTRA_PLATFORMS:
@@ -147,6 +151,13 @@ class Game():
 
     # --- Main program code ---
     def run(self):
+
+        # --- Enemy colors ---
+        enemy_colors = {
+            1: (0, 30, 71),
+            2: (0, 0, 0)
+        }
+
         title_text = Text("Jumping Shooter", "Arial", 36)
         black_heading = Player(0, self.__window.get_width(), 75, 0)
         black_heading.set_color((0, 0, 0))
@@ -168,7 +179,7 @@ class Game():
         Map = self.__all_levels[self.__level]
         additional_platforms = self.__all_extra_platforms[self.__level]
 
-        self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms)
+        self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms, enemy_colors)
         total_stars = count_stars(Map)
 
         stars_text = Text(f"Stars Collected: {self.__stars_collected}/{total_stars}", "Arial", 36, 300, 0)
@@ -288,7 +299,11 @@ class Game():
                 for enemy in self.__enemy_list:
                     if bullet.check_collision(enemy.get_width(), enemy.get_height(), enemy.get_pos()) is True:
                         self.__player.remove_bullet(bullet)
-                        self.__enemy_list.remove(enemy)
+                        enemy.lose_lives()
+                        if enemy.get_lives() < 1:
+                            self.__enemy_list.remove(enemy)
+                        else:
+                            enemy.set_color(enemy_colors[enemy.get_lives()])
                         break
             
             # --- Check collision with portal ---
@@ -300,7 +315,7 @@ class Game():
 
                 Map = self.__all_levels[self.__level]
                 additional_platforms = self.__all_extra_platforms[self.__level]
-                self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms)
+                self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms, enemy_colors)
                 self.__player.set_pos(player_pos[0], player_pos[1])
                 scroll_x = 0
                 scroll_y = 0
