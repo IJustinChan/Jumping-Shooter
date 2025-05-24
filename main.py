@@ -171,7 +171,7 @@ class Game():
         scroll_x = 0
         scroll_area_width = 180
         scroll_y = 0
-        scroll_area_bottom = 150
+        scroll_area_bottom = 165
         scroll_area_top = 225
 
         max_level = len(self.__all_levels)
