@@ -163,6 +163,8 @@ class Game():
         scroll_area_bottom = 150
         scroll_area_top = 225
 
+        max_level = len(self.__all_levels)
+
         Map = self.__all_levels[self.__level]
         additional_platforms = self.__all_extra_platforms[self.__level]
 
@@ -292,6 +294,10 @@ class Game():
             # --- Check collision with portal ---
             if self.__player.check_collision(portal_obj.get_width(), portal_obj.get_height(), portal_obj.get_pos()) is True:
                 self.next_level()
+                if self.__level > max_level:
+                    pygame.quit()
+                    exit()
+
                 Map = self.__all_levels[self.__level]
                 additional_platforms = self.__all_extra_platforms[self.__level]
                 self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms)
