@@ -154,7 +154,7 @@ class Game():
 
         # --- Enemy colors ---
         enemy_colors = {
-            1: (0, 30, 71),
+            1: (50, 80, 200),
             2: (0, 0, 0)
         }
 
