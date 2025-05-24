@@ -82,6 +82,13 @@ def check_collide_left(PLAYER, PLATFORM_LIST, SPEED):
             return True
     return False
 
+def count_stars(MAP):
+    num_stars = 0
+    for i in range(len(MAP)):
+        for j in range(len(MAP[0])):
+            if MAP[i][j] == 3:
+                num_stars += 1
+    return num_stars
 
 
 class Game():
@@ -101,7 +108,6 @@ class Game():
         all_levels_dict, all_platforms_dict = levels.get_levels_data()
         self.__all_levels = all_levels_dict
         self.__all_extra_platforms = all_platforms_dict
-
 
     def next_level(self):
         self.__level += 1
@@ -147,7 +153,6 @@ class Game():
 
         player_lives_text = Text(f"Lives: {self.__player.get_lives()}", "Arial")
         level_text = Text(f"Level: {self.__level}", "Arial", 36, 150, 0)
-        stars_text = Text(f"Stars Collected: {self.__stars_collected}", "Arial", 36, 300, 0)
 
         self.__player.set_pos(0, 200)
 
@@ -158,66 +163,13 @@ class Game():
         scroll_area_bottom = 150
         scroll_area_top = 225
 
-        # floor = [Platform(i * 100, self.__window.get_height() - 100, 100)
-        #      for i in range(-self.__window.get_width() // 100, (self.__window.get_width() * 2) // 100)]
-        # self.__platform_list += floor
-
-        # Map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-        #    [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 3], 
-        #    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0], 
-        #    [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0],
-        #    [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        #    [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-        #    [0, 1, 0, 0, 0, 0, 2, 0, 2, 0, 3, 0, 2, 0, 0, 2, 0, 0],
-        #    [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0]]
-        
-        # Map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0],
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0],
-        #    [0, 0, 0, 0, 0, 2, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        #    [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        #    [0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-        #    [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-        #    [0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 1, 0, 3, 0, 0, 0, 0, 3],
-        #    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], 
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-        #    [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        #    [0, 0, 1, 0, 0, 0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        #    [9, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        #    [1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        
-        # [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
         Map = self.__all_levels[self.__level]
         additional_platforms = self.__all_extra_platforms[self.__level]
-        
-        Count = 0
-        for i in range(len(Map) - 1, -1, -1):
-            for j in range(len(Map[0])):
-                if Map[i][j] == 1:
-                    self.__platform_list.append(Platform(100*j, (100*Count*-1) + self.__window.get_height() - 100, 100))
-                    self.__platform_list[-1].set_color((0, 255, 0))
-                elif Map[i][j] == 9:
-                    self.__player.set_pos(100*j, (100*Count*-1) + self.__window.get_height() - 100)
-                elif Map[i][j] == 3:
-                    self.__star_list.append(Star(100*j, (100*Count*-1) + self.__window.get_height() - 100, 20, 20))
-                elif Map[i][j] == 2:
-                    self.__enemy_list.append(Enemy(100*j + 25, (100*Count*-1) + self.__window.get_height() - 100+50, 50, 50, 1))
-                elif Map[i][j] == 4:
-                    portal_obj = Portal(100*j + 10, (100*Count*-1) + self.__window.get_height() - 100 + 20, 80, 80)
-            Count += 1
 
+        self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms)
+        total_stars = count_stars(Map)
+
+        stars_text = Text(f"Stars Collected: {self.__stars_collected}/{total_stars}", "Arial", 36, 300, 0)
 
         while True:
             # --- INPUTS ---
@@ -239,8 +191,6 @@ class Game():
 
                     elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2:
                         self.__player.shoot()
-                    elif event.key == pygame.K_t: # For collision testing purposes
-                        pass
 
             keys_pressed = pygame.key.get_pressed()
 
@@ -311,7 +261,7 @@ class Game():
             for star in self.__star_list:
                 if self.__player.check_collision(star.get_width(), star.get_height(), star.get_pos()) is True:
                     self.__stars_collected += 1
-                    stars_text.update_text(f"Stars Collected: {self.__stars_collected}")
+                    stars_text.update_text(f"Stars Collected: {self.__stars_collected}/{total_stars}")
                     self.__star_list.remove(star)
             
             for enemy in self.__enemy_list:
@@ -342,13 +292,19 @@ class Game():
             # --- Check collision with portal ---
             if self.__player.check_collision(portal_obj.get_width(), portal_obj.get_height(), portal_obj.get_pos()) is True:
                 self.next_level()
-                # PLATFORM_LIST, ENEMY_LIST, STARS_LIST, PLAYER_POS, portal_obj
                 Map = self.__all_levels[self.__level]
                 additional_platforms = self.__all_extra_platforms[self.__level]
                 self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms)
                 self.__player.set_pos(player_pos[0], player_pos[1])
                 scroll_x = 0
                 scroll_y = 0
+                self.__player.set_lives(3)
+
+                total_stars = count_stars(Map)
+                self.__stars_collected = 0
+                stars_text.update_text(f"Stars Collected: {self.__stars_collected}/{total_stars}")
+                level_text.update_text(f"Level: {self.__level}")
+                
 
             # --- Update texts ---
             player_lives_text.update_text(f"Lives: {self.__player.get_lives()}")

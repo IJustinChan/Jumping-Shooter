@@ -99,6 +99,9 @@ class Player(Sprite):
 
     def remove_bullet(self, bullet):
         self.__bullet_list.remove(bullet)
+    
+    def set_lives(self, num_lives):
+        self.__lives = num_lives
 
     # --- Accessors ---
     def get_lives(self):
