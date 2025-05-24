@@ -12,6 +12,7 @@ from platforms import Platform
 from player import Player
 from star import Star
 from text import Text
+from portal import Portal
 import levels
 
 def check_touching_platform(PLAYER, PLATFORM_LIST):
@@ -94,6 +95,7 @@ class Game():
         self.__stars_collected = 0
         self.__all_levels = None
         self.__all_extra_platforms = None
+        self.__setup()
 
     def __setup(self):
         all_levels_dict, all_platforms_dict = levels.get_levels_data()
@@ -102,18 +104,40 @@ class Game():
 
 
     def next_level(self):
-        pass
+        self.__level += 1
+        self.__platform_list = []
+        self.__enemy_list = []
+        self.__star_list = []
 
-    def create_level(self):
-        pass
+    def create_level(self, MAP, EXTRA_PLATFORMS):
+        PLATFORM_LIST = []
+        ENEMY_LIST = []
+        STARS_LIST = []
+        
+        PLAYER_POS = None
 
-    # --- Text methods ---
-    def create_texts(self):
-        pass
+        Count = 0
+        for i in range(len(MAP) - 1, -1, -1):
+            for j in range(len(MAP[0])):
+                if MAP[i][j] == 1:
+                    PLATFORM_LIST.append(Platform(100*j, (100*Count*-1) + self.__window.get_height() - 100, 100))
+                    PLATFORM_LIST[-1].set_color((0, 255, 0))
+                elif MAP[i][j] == 9:
+                    PLAYER_POS = (100*j, (100*Count*-1) + self.__window.get_height() - 100)
+                    # self.__player.set_pos(100*j, (100*Count*-1) + self.__window.get_height() - 100)
+                elif MAP[i][j] == 3:
+                    STARS_LIST.append(Star(100*j, (100*Count*-1) + self.__window.get_height() - 100, 20, 20))
+                elif MAP[i][j] == 2:
+                    ENEMY_LIST.append(Enemy(100*j + 25, (100*Count*-1) + self.__window.get_height() - 100+50, 50, 50, 1))
+                elif MAP[i][j] == 4:
+                    portal_obj = Portal(100*j + 10, (100*Count*-1) + self.__window.get_height() - 100 + 20, 80, 80)
+            Count += 1
 
-    def draw_texts(self):
-        #self.__window.get_surface().blit(title_text.get_surface(), title_text.get_pos())
-        pass
+        for platform in EXTRA_PLATFORMS:
+            PLATFORM_LIST.append(platform)
+
+        return PLATFORM_LIST, ENEMY_LIST, STARS_LIST, PLAYER_POS, portal_obj
+
 
     # --- Main program code ---
     def run(self):
@@ -138,18 +162,18 @@ class Game():
         #      for i in range(-self.__window.get_width() // 100, (self.__window.get_width() * 2) // 100)]
         # self.__platform_list += floor
 
-        Map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 3], 
-           [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0], 
-           [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0],
-           [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-           [0, 1, 0, 0, 0, 0, 2, 0, 2, 0, 3, 0, 2, 0, 0, 2, 0, 0],
-           [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0]]
+        # Map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0],
+        #    [0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
+        #    [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        #    [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0],
+        #    [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 3], 
+        #    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0], 
+        #    [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0],
+        #    [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        #    [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        #    [0, 1, 0, 0, 0, 0, 2, 0, 2, 0, 3, 0, 2, 0, 0, 2, 0, 0],
+        #    [1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0]]
         
         # Map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         #    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -174,6 +198,9 @@ class Game():
         #    [1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         
         # [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+        Map = self.__all_levels[self.__level]
+        additional_platforms = self.__all_extra_platforms[self.__level]
         
         Count = 0
         for i in range(len(Map) - 1, -1, -1):
@@ -187,6 +214,8 @@ class Game():
                     self.__star_list.append(Star(100*j, (100*Count*-1) + self.__window.get_height() - 100, 20, 20))
                 elif Map[i][j] == 2:
                     self.__enemy_list.append(Enemy(100*j + 25, (100*Count*-1) + self.__window.get_height() - 100+50, 50, 50, 1))
+                elif Map[i][j] == 4:
+                    portal_obj = Portal(100*j + 10, (100*Count*-1) + self.__window.get_height() - 100 + 20, 80, 80)
             Count += 1
 
 
@@ -310,6 +339,16 @@ class Game():
                         self.__enemy_list.remove(enemy)
                         break
             
+            # --- Check collision with portal ---
+            if self.__player.check_collision(portal_obj.get_width(), portal_obj.get_height(), portal_obj.get_pos()) is True:
+                self.next_level()
+                # PLATFORM_LIST, ENEMY_LIST, STARS_LIST, PLAYER_POS, portal_obj
+                Map = self.__all_levels[self.__level]
+                additional_platforms = self.__all_extra_platforms[self.__level]
+                self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms)
+                self.__player.set_pos(player_pos[0], player_pos[1])
+                scroll_x = 0
+                scroll_y = 0
 
             # --- Update texts ---
             player_lives_text.update_text(f"Lives: {self.__player.get_lives()}")
@@ -359,6 +398,8 @@ class Game():
             
             for star in self.__star_list:
                 self.__window.get_surface().blit(star.get_surface(), (star.get_pos()[0] - scroll_x, star.get_pos()[1] - scroll_y))
+
+            self.__window.get_surface().blit(portal_obj.get_surface(), (portal_obj.get_pos()[0] - scroll_x, portal_obj.get_pos()[1] - scroll_y))
             
             self.__window.get_surface().blit(black_heading.get_surface(), black_heading.get_pos())
             self.__window.get_surface().blit(player_lives_text.get_surface(), player_lives_text.get_pos())
@@ -374,7 +415,6 @@ class Game():
 if __name__ == "__main__":
     pygame.init()
     GAME = Game()
-    GAME.create_texts()
     GAME.run()
 
 
