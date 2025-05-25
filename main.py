@@ -307,7 +307,7 @@ class Game():
                         break
             
             # --- Check collision with portal ---
-            if self.__player.check_collision(portal_obj.get_width(), portal_obj.get_height(), portal_obj.get_pos()) is True:
+            if self.__player.check_collision(portal_obj.get_width(), portal_obj.get_height(), portal_obj.get_pos()) is True and self.__stars_collected == total_stars:
                 self.next_level()
                 if self.__level > max_level:
                     pygame.quit()
