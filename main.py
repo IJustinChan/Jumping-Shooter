@@ -93,9 +93,9 @@ def count_stars(MAP):
 
 class Game():
     def __init__(self):
-        self.__window = Window("Platformer", 750, 600, 60)
+        self.__window = Window("Platformer", 800, 600, 60)
         self.__level = 1
-        self.__player = Player(3, 50, 50, 5)
+        self.__player = Player(5, 50, 50, 5)
         self.__enemy_list = []
         self.__platform_list = []
         self.__star_list = []
@@ -147,7 +147,59 @@ class Game():
             PLATFORM_LIST.append(platform)
 
         return PLATFORM_LIST, ENEMY_LIST, STARS_LIST, PLAYER_POS, portal_obj
+    
+    # --- Start screen code ---
+    def show_start_screen(self):
+        title_text = Text("Jumping Shooter", "Arial", 70)
+        play_text = Text("Press the space bar to start the game!", "Arial", 40)
 
+        running = True
+        while running:
+            # --- INPUTS ---
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+
+            keys_pressed = pygame.key.get_pressed()
+
+            if keys_pressed[pygame.K_SPACE] == 1:
+                running = False
+            
+            self.__window.clear_screen()
+            self.__window.get_surface().blit(title_text.get_surface(), (self.__window.get_width()/2 - title_text.get_width()/2, self.__window.get_height()/2 - title_text.get_height()/2))
+            self.__window.get_surface().blit(play_text.get_surface(), (self.__window.get_width()/2 - play_text.get_width()/2, self.__window.get_height()/2 - play_text.get_height()/2 + 100))
+
+            self.__window.update_frame()
+
+    # --- End screen code ---
+    def show_end_screen(self):
+        finished_game_text = Text("You have completed the game! Thanks for playing!", "Arial", 35)
+        restart_text = Text("Press the space bar if you want to restart the game", "Arial", 30)
+        exit_text = Text("Press the exit button in the top right corner to quit the game", "Arial", 25)
+
+        running = True
+        while running:
+            # --- INPUTS ---
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+
+            keys_pressed = pygame.key.get_pressed()
+
+            if keys_pressed[pygame.K_SPACE] == 1:
+                running = False
+                self.__level = 1
+                self.__stars_collected = 0
+                self.__player.set_lives(5)
+            
+            self.__window.clear_screen()
+            self.__window.get_surface().blit(finished_game_text.get_surface(), (self.__window.get_width()/2 - finished_game_text.get_width()/2, self.__window.get_height()/2 - finished_game_text.get_height()/2 - 20))
+            self.__window.get_surface().blit(restart_text.get_surface(), (self.__window.get_width()/2 - restart_text.get_width()/2, self.__window.get_height()/2 - restart_text.get_height()/2 + 50))
+            self.__window.get_surface().blit(exit_text.get_surface(), (self.__window.get_width()/2 - exit_text.get_width()/2, self.__window.get_height()/2 - exit_text.get_height()/2 + 100))
+
+            self.__window.update_frame()
 
     # --- Main program code ---
     def run(self):
@@ -158,7 +210,6 @@ class Game():
             2: (0, 0, 0)
         }
 
-        title_text = Text("Jumping Shooter", "Arial", 36)
         black_heading = Player(0, self.__window.get_width(), 75, 0)
         black_heading.set_color((0, 0, 0))
 
@@ -169,7 +220,7 @@ class Game():
 
         # --- Variables to control how the camera moves as the player moves ---
         scroll_x = 0
-        scroll_area_width = 180
+        scroll_area_width = 205
         scroll_y = 0
         scroll_area_bottom = 165
         scroll_area_top = 225
@@ -184,7 +235,8 @@ class Game():
 
         stars_text = Text(f"Stars Collected: {self.__stars_collected}/{total_stars}", "Arial", 36, 300, 0)
 
-        while True:
+        running = True
+        while running:
             # --- INPUTS ---
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -310,25 +362,42 @@ class Game():
             if self.__player.check_collision(portal_obj.get_width(), portal_obj.get_height(), portal_obj.get_pos()) is True and self.__stars_collected == total_stars:
                 self.next_level()
                 if self.__level > max_level:
-                    pygame.quit()
-                    exit()
+                    running = False
+                else:
 
+                    Map = self.__all_levels[self.__level]
+                    additional_platforms = self.__all_extra_platforms[self.__level]
+                    self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms, enemy_colors)
+                    self.__player.set_pos(player_pos[0], player_pos[1])
+                    scroll_x = 0
+                    scroll_y = 0
+                    self.__player.set_lives(5)
+
+                    total_stars = count_stars(Map)
+                    self.__stars_collected = 0
+                    stars_text.update_text(f"Stars Collected: {self.__stars_collected}/{total_stars}")
+                    level_text.update_text(f"Level: {self.__level}")
+                
+
+            # --- Update texts ---
+            player_lives_text.update_text(f"Lives: {self.__player.get_lives()}")
+
+
+            # --- Check if the player died ---
+            if self.__player.get_lives() <= 0:
+                # Reset the level by recreating all the map and all enemies and stars
                 Map = self.__all_levels[self.__level]
                 additional_platforms = self.__all_extra_platforms[self.__level]
                 self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms, enemy_colors)
                 self.__player.set_pos(player_pos[0], player_pos[1])
                 scroll_x = 0
                 scroll_y = 0
-                self.__player.set_lives(3)
+                self.__player.set_lives(5)
 
                 total_stars = count_stars(Map)
                 self.__stars_collected = 0
                 stars_text.update_text(f"Stars Collected: {self.__stars_collected}/{total_stars}")
                 level_text.update_text(f"Level: {self.__level}")
-                
-
-            # --- Update texts ---
-            player_lives_text.update_text(f"Lives: {self.__player.get_lives()}")
 
 
             # --- Handle camera movement (make camera scroll according to how the player moves) ---
@@ -352,12 +421,6 @@ class Game():
 
             # --- OUTPUTS ---
             self.__window.clear_screen()
-
-            # Don't delete the code below as it is the original one without any scrolling
-            # self.__window.get_surface().blit(title_text.get_surface(), (self.__window.get_width()/2 - title_text.get_width()/2, self.__window.get_height()/2 - title_text.get_height()/2))
-
-            # This text below includes scrolling to help with testing purposes
-            self.__window.get_surface().blit(title_text.get_surface(), (self.__window.get_width()/2 - title_text.get_width()/2 - scroll_x, self.__window.get_height()/2 - title_text.get_height()/2 - scroll_y))
 
             for bullet in self.__player.get_bullet_list():
                 self.__window.get_surface().blit(bullet.get_surface(), (bullet.get_pos()[0] - scroll_x, bullet.get_pos()[1] - scroll_y))
@@ -392,7 +455,11 @@ class Game():
 if __name__ == "__main__":
     pygame.init()
     GAME = Game()
-    GAME.run()
+    GAME.show_start_screen()
+
+    while True:
+        GAME.run()
+        GAME.show_end_screen()
 
 
 
