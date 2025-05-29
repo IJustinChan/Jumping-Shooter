@@ -38,6 +38,12 @@ class Enemy(Sprite):
         self.__bullet_list.append(bullet)
 
     def detect_player(self, player_pos, player_height):
+        """
+        Checks if the player lines up with the enemy
+        :param player_pos: tuple
+        :param player_height: int
+        :return: bool, str
+        """
 
         player_x = player_pos[0]
         player_y = player_pos[1]
@@ -54,11 +60,11 @@ class Enemy(Sprite):
             # Make sure the player is at a reasonable distance from the enemy
             x_distance = abs(enemy_x - player_x)
             # print(x_distance)
-            if x_distance <= 600:
+            if x_distance <= 600: # Player close enough
                 see_player = True
-                if player_x <= enemy_x:
+                if player_x <= enemy_x: # Player is on the left of the enemy
                     direction = "left"
-                else:
+                else: # Player is on the right of the enemy
                     direction = "right"
                 return see_player, direction
             else:

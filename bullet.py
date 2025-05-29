@@ -15,7 +15,7 @@ class Bullet(Sprite):
 
     def move(self):
         pos = self.get_pos()
-        new_x = pos[0] + (self.__dir_x*self.get_speed())
+        new_x = pos[0] + (self.__dir_x*self.get_speed()) # Add the speed to its x-position to move it
         self.set_pos(new_x, pos[1])
 
     # --- Accessors ---
