@@ -16,43 +16,70 @@ from portal import Portal
 import levels
 
 def check_touching_platform(PLAYER, PLATFORM_LIST):
+    """
+    Check to see if the player is colliding with a platform
+    :param PLAYER: obj
+    :param PLATFORM_LIST: list[obj]
+    :return: bool
+    """
     for platform in PLATFORM_LIST:
         if PLAYER.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
             return True
     return False
 
 def check_collide_right(PLAYER, PLATFORM_LIST, SPEED):
+    """
+    Check if the player will hit a platform if they move to the right
+    :param PLAYER: obj
+    :param PLATFORM_LIST: list[obj]
+    :param SPEED: int
+    :return: bool
+    """
+    # Get the player's position
     player_position = PLAYER.get_pos()
     player_x = player_position[0]
     player_y = player_position[1]
-    
+
+    # Define the current vertices
     new_top_right = (player_x + PLAYER.get_width() + SPEED, player_y)
     new_bottom_right = (player_x + PLAYER.get_width() + SPEED, player_y + PLAYER.get_height())
 
+    # Get the new position after vertices when they move right
     new_top_left = (player_x + SPEED, player_y)
     new_bottom_left = (player_x + SPEED, player_y + PLAYER.get_height())
 
     for platform in PLATFORM_LIST:
         platform_position = platform.get_pos()
 
+        # Define the sides of the platform
         platform_left_side = platform_position[0]
         platform_right_side = platform_left_side + platform.get_width()
         platform_top_side = platform_position[1]
         platform_bottom_side = platform_top_side + platform.get_height()
 
+        # This part checks to make sure the player is not touching the bottom or top of platform
+        # This ensures that we don't consider player being above or below platform as horizontal collision
         if (new_top_left[0] >= platform_left_side and new_top_left[0] <= platform_right_side) and (new_top_left[1] >= platform_top_side and new_top_left[1] <= platform_bottom_side):
             continue
         if (new_bottom_left[0] >= platform_left_side and new_bottom_left[0] <= platform_right_side) and (new_bottom_left[1] >= platform_top_side and new_bottom_left[1] <= platform_bottom_side):
             continue
 
+        # Checks if the new vertices will be between the platform (after handling edge case above)
         if (new_top_right[0] >= platform_left_side and new_top_right[0] <= platform_right_side) and (new_top_right[1] > platform_top_side and new_top_right[1] < platform_bottom_side):
-            return True
+            return True # This means that the player has collided with a platform when moving right
         if (new_bottom_right[0] >= platform_left_side and new_bottom_right[0] <= platform_right_side) and (new_bottom_right[1] > platform_top_side and new_bottom_right[1] < platform_bottom_side):
             return True
-    return False
+    return False # Player did not hit any platforms when moving right
     
 
-def check_collide_left(PLAYER, PLATFORM_LIST, SPEED):
+def check_collide_left(PLAYER, PLATFORM_LIST, SPEED): # Works exactly the same way as the right side collision, but modified to for left movement
+    """
+    Check if the player will hit a platform when they move left
+    :param PLAYER: obj
+    :param PLATFORM_LIST: list[obj]
+    :param SPEED: int
+    :return: bool
+    """
     player_position = PLAYER.get_pos()
     player_x = player_position[0]
     player_y = player_position[1]
@@ -71,18 +98,25 @@ def check_collide_left(PLAYER, PLATFORM_LIST, SPEED):
         platform_top_side = platform_position[1]
         platform_bottom_side = platform_top_side + platform.get_height()
 
+        # Ensure that the player is not above or below a platform
         if (new_top_right[0] <= platform_left_side and new_top_right[0] >= platform_right_side) and (new_top_right[1] >= platform_top_side and new_top_right[1] <= platform_bottom_side):
             continue
         if (new_bottom_right[0] <= platform_left_side and new_bottom_right[0] >= platform_right_side) and (new_bottom_right[1] >= platform_top_side and new_bottom_right[1] <= platform_bottom_side):
             continue
 
+        # Check if the player will hit a platform when they move left
         if (new_top_left[0] <= platform_right_side and new_top_left[0] >= platform_right_side) and (new_top_left[1] > platform_top_side and new_top_left[1] <= platform_bottom_side):
             return True
         if (new_bottom_right[0] <= platform_right_side and new_bottom_left[0] >= platform_right_side) and (new_bottom_right[1] > platform_top_side and new_bottom_right[1] <= platform_bottom_side):
             return True
-    return False
+    return False # Player did not hit the right side of any platform
 
 def count_stars(MAP):
+    """
+    Count how many stars are in the level
+    :param MAP: 2D array
+    :return: int
+    """
     num_stars = 0
     for i in range(len(MAP)):
         for j in range(len(MAP[0])):
@@ -116,6 +150,13 @@ class Game():
         self.__star_list = []
 
     def create_level(self, MAP, EXTRA_PLATFORMS, ENEMY_COLORS):
+        """
+        Use the map to create the platforms, stars, portal and enemies
+        :param MAP:
+        :param EXTRA_PLATFORMS:
+        :param ENEMY_COLORS:
+        :return: list[obj], list[obj], list[obj], tuple, obj
+        """
         PLATFORM_LIST = []
         ENEMY_LIST = []
         STARS_LIST = []
@@ -188,7 +229,7 @@ class Game():
 
             keys_pressed = pygame.key.get_pressed()
 
-            if keys_pressed[pygame.K_SPACE] == 1:
+            if keys_pressed[pygame.K_SPACE] == 1: # Player wants to start the game
                 running = False
                 self.__level = 1
                 self.__stars_collected = 0
@@ -260,102 +301,110 @@ class Game():
             keys_pressed = pygame.key.get_pressed()
 
             # --- PROCESSING ---
+            # Check if the player has horizontally collided with any platform when moving left or right
             if keys_pressed[pygame.K_d] == 1 or keys_pressed[pygame.K_RIGHT] == 1:
-                if check_collide_right(self.__player, self.__platform_list, self.__player.get_speed_x()) is False:
+                if check_collide_right(self.__player, self.__platform_list, self.__player.get_speed_x()) is False: # Allow player to move only when they won't move into a platform
                     self.__player.move_x(keys_pressed)
             elif keys_pressed[pygame.K_a] == 1 or keys_pressed[pygame.K_LEFT] == 1:
                 if check_collide_left(self.__player, self.__platform_list, self.__player.get_speed_x()) is False:
                     self.__player.move_x(keys_pressed)
 
-            self.__player.apply_gravity()
+            self.__player.apply_gravity() # Apply gravity onto the player
 
-            for bullet in self.__player.get_bullet_list():
+            for bullet in self.__player.get_bullet_list(): # Move any bullets the player shot
                 bullet.move()
                 bullet_direction = bullet.get_dir_x()
                 bullet_position = bullet.get_pos()
                 bullet_x = bullet_position[0]
                 if bullet_direction == 1: # Bullet moving to the right
-                    if bullet_x > self.__window.get_width() + scroll_x + 150:
+                    if bullet_x > self.__window.get_width() + scroll_x + 150: # Remove the bullet if it goes too much offscreen to the right
                         self.__player.remove_bullet(bullet)
                 elif bullet_direction == -1: # Bullet moving to the left
-                    if bullet_x < 0 + scroll_x - bullet.get_width() - 150:
+                    if bullet_x < 0 + scroll_x - bullet.get_width() - 150: # Remove the bullet if it went too much to the left offscreen
                         self.__player.remove_bullet(bullet)
-                
+
+                # Checks if the bullet has hit any platform
                 for platform in self.__platform_list:
                     try:
-                        if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()):
+                        if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()): # Remove the bullet after it hits platform
                             self.__player.remove_bullet(bullet)
-                            break
+                            break # Stop the loop as the bullet is gone
                     except:
                         pass
             
-            for enemy in self.__enemy_list:
+            for enemy in self.__enemy_list: # Make the enemy shoot the player
+
+                # Check if the player is between enemy top and bottom vertices
                 see_player, shooting_direction = enemy.detect_player(self.__player.get_pos(), self.__player.get_height())
-                if see_player is True:
-                    if len(enemy.get_bullet_list()) < 1:
+                if see_player is True: # Enemy can see the player
+                    if len(enemy.get_bullet_list()) < 1: # Make the enemy shoot only when it does not have any other bullets created
                         enemy.shoot(shooting_direction)
                 
-                for bullet in enemy.get_bullet_list():
+                for bullet in enemy.get_bullet_list(): # Move each of the enemy's bullet
                     bullet.move()
 
                     enemy_bullet_x = bullet.get_pos()[0]
                     player_x = self.__player.get_pos()[0]
                     distance = abs(enemy_bullet_x - player_x)
-                    if distance > 700:
+                    if distance > 700: # Remove the enemy's bullet when it is 700 pixels away from the player
                         enemy.remove_bullet(bullet)
 
             # Check if the player fell down the map
             if self.__player.get_pos()[1] > self.__window.get_height() + 1300: # Player dead
                 # Respawn the player somewhere
                 self.__player.set_pos(0, 200)
+
+                # Reset cameras
                 scroll_x = 0
                 scroll_y = 0
-                self.__player.lose_life()
+
+                self.__player.lose_life() # Make the player lose a life
   
             # --- Collisions ---
-            for platform in self.__platform_list:
+            for platform in self.__platform_list: # Handle player and platform collision
                 if self.__player.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
-                    # check_collision_side(self.__player, platform)
                     if self.__player.get_speed_y() > 0: # Player landed on the platform
                         self.__player.set_pos(self.__player.get_pos()[0], platform.get_pos()[1] - self.__player.get_height())
-                        self.__player.landed()
+                        self.__player.landed() # Set gravity to zero
                     elif self.__player.get_speed_y() < 0: # Player's head hit a platform
                         self.__player.set_pos(self.__player.get_pos()[0], platform.get_pos()[1] + platform.get_height() + 1)
-                        self.__player.hit_head()
+                        self.__player.hit_head() # Reverse player acceleration to move them down
             
-            for star in self.__star_list:
+            for star in self.__star_list: # Handle star and player collision
                 if self.__player.check_collision(star.get_width(), star.get_height(), star.get_pos()) is True:
                     self.__stars_collected += 1
                     stars_text.update_text(f"Stars Collected: {self.__stars_collected}/{total_stars}")
-                    self.__star_list.remove(star)
+                    self.__star_list.remove(star) # Remove the star from the game
             
-            for enemy in self.__enemy_list:
+            for enemy in self.__enemy_list: # Check if the player got hit by a enemy's bullet
                 for bullet in enemy.get_bullet_list():
                     if self.__player.check_collision(bullet.get_width(), bullet.get_height(), bullet.get_pos()) is True:
+                        # Remove the bullet and make the player lose a life
                         enemy.remove_bullet(bullet)
                         self.__player.lose_life()
 
-            for enemy in self.__enemy_list:
+            for enemy in self.__enemy_list: # Check if the player collided with an enemy
                 if self.__player.check_collision(enemy.get_width(), enemy.get_height(), enemy.get_pos()) is True:
+                    # Remove the enemy and make the player lose a life
                     self.__enemy_list.remove(enemy)
                     self.__player.lose_life()
             
-            for enemy in self.__enemy_list:
+            for enemy in self.__enemy_list: # Check if a enemy's bullet hit a platform
                 for bullet in enemy.get_bullet_list():
                     for platform in self.__platform_list:
-                        if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
+                        if bullet.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True: # Remove the bullet after it hits platform
                             enemy.remove_bullet(bullet)
 
             # Traverse the list backwards to make deletion easier
-            for bullet in reversed(self.__player.get_bullet_list()):
+            for bullet in reversed(self.__player.get_bullet_list()): # Check if the player's bullet hit an enemy
                 for enemy in self.__enemy_list:
                     if bullet.check_collision(enemy.get_width(), enemy.get_height(), enemy.get_pos()) is True:
                         self.__player.remove_bullet(bullet)
-                        enemy.lose_lives()
-                        if enemy.get_lives() < 1:
+                        enemy.lose_lives() # Make enemy lose life
+                        if enemy.get_lives() < 1: # Enemy is dead if it is out of lives
                             self.__enemy_list.remove(enemy)
                         else:
-                            enemy.set_color(enemy_colors[enemy.get_lives()])
+                            enemy.set_color(enemy_colors[enemy.get_lives()]) # Change enemy's color to show its new health
                         break
             
             # --- Check collision with portal ---
