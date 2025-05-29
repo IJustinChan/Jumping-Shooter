@@ -12,7 +12,6 @@ class Player(Sprite):
         self.__speed_x = speed_x
         self.__speed_y = 0
         self.__fall_count = 0
-        self.__hit = False
         self.__bullet_list = []
         self.__num_jumps = 0
         self.__direction_facing = "right" # Allows us to determine which way to shoot the bullet
@@ -102,6 +101,9 @@ class Player(Sprite):
     
     def set_lives(self, num_lives):
         self.__lives = num_lives
+
+    def clear_bullet_list(self):
+        self.__bullet_list = []
 
     # --- Accessors ---
     def get_lives(self):

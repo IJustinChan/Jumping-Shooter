@@ -393,6 +393,7 @@ class Game():
                 scroll_x = 0
                 scroll_y = 0
                 self.__player.set_lives(5)
+                self.__player.clear_bullet_list()
 
                 total_stars = count_stars(Map)
                 self.__stars_collected = 0
