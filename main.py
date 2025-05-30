@@ -308,6 +308,8 @@ class Game():
             elif keys_pressed[pygame.K_a] == 1 or keys_pressed[pygame.K_LEFT] == 1:
                 if check_collide_left(self.__player, self.__platform_list, self.__player.get_speed_x()) is False:
                     self.__player.move_x(keys_pressed)
+            elif keys_pressed[pygame.K_t] == 1:
+                self.__player.set_lives(100)
 
             self.__player.apply_gravity() # Apply gravity onto the player
 
