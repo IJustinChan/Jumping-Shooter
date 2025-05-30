@@ -102,12 +102,12 @@ level_3_extra_platforms = []
 # [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 # --- Add each level to the Levels dictionary here ---
-levels_building_blocks[1] = testing
-extra_platforms[1] = testing_extra
+# levels_building_blocks[1] = testing
+# extra_platforms[1] = testing_extra
 
 
-# levels_building_blocks[1] = level_1_main_platforms
-# extra_platforms[1] = level_1_extra_platforms
+levels_building_blocks[1] = level_1_main_platforms
+extra_platforms[1] = level_1_extra_platforms
 
 levels_building_blocks[2] = level_2_main_platforms
 extra_platforms[2] = level_2_extra_platforms

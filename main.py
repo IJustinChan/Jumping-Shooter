@@ -14,6 +14,7 @@ from star import Star
 from text import Text
 from portal import Portal
 import levels
+import extra_levels
 
 def check_touching_platform(PLAYER, PLATFORM_LIST):
     """
@@ -149,7 +150,7 @@ class Game():
         self.__enemy_list = []
         self.__star_list = []
 
-    def create_level(self, MAP, EXTRA_PLATFORMS, ENEMY_COLORS):
+    def create_level(self, MAP, EXTRA_PLATFORMS=[], ENEMY_COLORS={}):
         """
         Use the map to create the platforms, stars, portal and enemies
         :param MAP:
@@ -161,7 +162,7 @@ class Game():
         ENEMY_LIST = []
         STARS_LIST = []
         
-        PLAYER_POS = None
+        PLAYER_POS = (0, 200)
 
         Count = 0
         for i in range(len(MAP) - 1, -1, -1):
@@ -213,34 +214,6 @@ class Game():
 
             self.__window.update_frame()
 
-    # --- End screen code ---
-    def show_end_screen(self):
-        finished_game_text = Text("You have completed the game! Thanks for playing!", "Arial", 35)
-        restart_text = Text("Press the space bar if you want to restart the game", "Arial", 30)
-        exit_text = Text("Press the exit button in the top right corner to quit the game", "Arial", 25)
-
-        running = True
-        while running:
-            # --- INPUTS ---
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
-
-            keys_pressed = pygame.key.get_pressed()
-
-            if keys_pressed[pygame.K_SPACE] == 1: # Player wants to start the game
-                running = False
-                self.__level = 1
-                self.__stars_collected = 0
-                self.__player.set_lives(5)
-            
-            self.__window.clear_screen()
-            self.__window.get_surface().blit(finished_game_text.get_surface(), (self.__window.get_width()/2 - finished_game_text.get_width()/2, self.__window.get_height()/2 - finished_game_text.get_height()/2 - 20))
-            self.__window.get_surface().blit(restart_text.get_surface(), (self.__window.get_width()/2 - restart_text.get_width()/2, self.__window.get_height()/2 - restart_text.get_height()/2 + 50))
-            self.__window.get_surface().blit(exit_text.get_surface(), (self.__window.get_width()/2 - exit_text.get_width()/2, self.__window.get_height()/2 - exit_text.get_height()/2 + 100))
-
-            self.__window.update_frame()
 
     # --- Main program code ---
     def run(self):
@@ -266,13 +239,14 @@ class Game():
         scroll_area_bottom = 165
         scroll_area_top = 225
 
-        max_level = len(self.__all_levels)
+        max_campaign_level = len(self.__all_levels)
 
         Map = self.__all_levels[self.__level]
         additional_platforms = self.__all_extra_platforms[self.__level]
 
         self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms, enemy_colors)
         total_stars = count_stars(Map)
+        self.__player.set_pos(player_pos[0], player_pos[1])
 
         stars_text = Text(f"Stars Collected: {self.__stars_collected}/{total_stars}", "Arial", 36, 300, 0)
 
@@ -297,6 +271,43 @@ class Game():
 
                     elif event.key == pygame.K_SPACE and len(self.__player.get_bullet_list()) < 2:
                         self.__player.shoot()
+                    elif event.key == pygame.K_y:
+                        self.next_level()
+                        if self.__level > max_campaign_level: # Player completed the all the campaign levels so random levels will begin generating
+                            Map = extra_levels.generate_random_levels()
+                            additional_platforms = [] # Random levels have no additional platforms
+                            self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, ENEMY_COLORS=enemy_colors)
+                            self.__player.set_pos(player_pos[0], player_pos[1]) # Reset player position
+
+                            # Reset camera
+                            scroll_x = 0
+                            scroll_y = 0
+                            self.__player.set_lives(5) # Reset lives
+
+                            total_stars = count_stars(Map)
+                            self.__stars_collected = 0
+                            # Update the stars and levels text
+                            stars_text.update_text(f"Stars Collected: {self.__stars_collected}/{total_stars}")
+                            level_text.update_text(f"Level: {self.__level}")
+                            
+                        else:
+                            # Get the map of the new level
+                            Map = self.__all_levels[self.__level]
+                            additional_platforms = self.__all_extra_platforms[self.__level]
+                            self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms, enemy_colors)
+
+                            self.__player.set_pos(player_pos[0], player_pos[1]) # Reset player position
+
+                            # Reset camera
+                            scroll_x = 0
+                            scroll_y = 0
+                            self.__player.set_lives(5) # Reset lives
+
+                            total_stars = count_stars(Map)
+                            self.__stars_collected = 0
+                            # Update the stars and levels text
+                            stars_text.update_text(f"Stars Collected: {self.__stars_collected}/{total_stars}")
+                            level_text.update_text(f"Level: {self.__level}")
 
             keys_pressed = pygame.key.get_pressed()
 
@@ -309,7 +320,7 @@ class Game():
                 if check_collide_left(self.__player, self.__platform_list, self.__player.get_speed_x()) is False:
                     self.__player.move_x(keys_pressed)
             elif keys_pressed[pygame.K_t] == 1:
-                self.__player.set_lives(100)
+                self.__player.set_lives(99)
 
             self.__player.apply_gravity() # Apply gravity onto the player
 
@@ -350,18 +361,8 @@ class Game():
                     distance = abs(enemy_bullet_x - player_x)
                     if distance > 700: # Remove the enemy's bullet when it is 700 pixels away from the player
                         enemy.remove_bullet(bullet)
-
-            # Check if the player fell down the map
-            if self.__player.get_pos()[1] > self.__window.get_height() + 1300: # Player dead
-                # Respawn the player somewhere
-                self.__player.set_pos(0, 200)
-
-                # Reset cameras
-                scroll_x = 0
-                scroll_y = 0
-
-                self.__player.lose_life() # Make the player lose a life
   
+
             # --- Collisions ---
             for platform in self.__platform_list: # Handle player and platform collision
                 if self.__player.check_collision(platform.get_width(), platform.get_height(), platform.get_pos()) is True:
@@ -408,12 +409,38 @@ class Game():
                         else:
                             enemy.set_color(enemy_colors[enemy.get_lives()]) # Change enemy's color to show its new health
                         break
+
+            # --- Check if the player fell down the map ---
+            if self.__player.get_pos()[1] > self.__window.get_height() + 1300: # Player dead
+                # Respawn the player at its location
+                self.__player.set_pos(player_pos[0], player_pos[1])
+
+                # Reset cameras
+                scroll_x = 0
+                scroll_y = 0
+
+                self.__player.lose_life() # Make the player lose a life
             
             # --- Check collision with portal ---
             if self.__player.check_collision(portal_obj.get_width(), portal_obj.get_height(), portal_obj.get_pos()) is True and self.__stars_collected == total_stars:
                 self.next_level() # Increase the level
-                if self.__level > max_level: # Player completed the max level so end the game
-                    running = False
+                if self.__level > max_campaign_level: # Player completed the all the campaign levels so random levels will begin generating
+                    Map = extra_levels.generate_random_levels()
+                    additional_platforms = [] # Random levels have no additional platforms
+                    self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, ENEMY_COLORS=enemy_colors)
+                    self.__player.set_pos(player_pos[0], player_pos[1]) # Reset player position
+
+                    # Reset camera
+                    scroll_x = 0
+                    scroll_y = 0
+                    self.__player.set_lives(5) # Reset lives
+
+                    total_stars = count_stars(Map)
+                    self.__stars_collected = 0
+                    # Update the stars and levels text
+                    stars_text.update_text(f"Stars Collected: {self.__stars_collected}/{total_stars}")
+                    level_text.update_text(f"Level: {self.__level}")
+                    
                 else:
                     # Get the map of the new level
                     Map = self.__all_levels[self.__level]
@@ -421,6 +448,7 @@ class Game():
                     self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms, enemy_colors)
 
                     self.__player.set_pos(player_pos[0], player_pos[1]) # Reset player position
+
                     # Reset camera
                     scroll_x = 0
                     scroll_y = 0
@@ -440,8 +468,6 @@ class Game():
             # --- Check if the player died ---
             if self.__player.get_lives() <= 0:
                 # Reset the level by recreating all the map and all enemies and stars
-                Map = self.__all_levels[self.__level]
-                additional_platforms = self.__all_extra_platforms[self.__level]
                 self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms, enemy_colors)
                 self.__player.set_pos(player_pos[0], player_pos[1])
                 scroll_x = 0
@@ -511,10 +537,7 @@ if __name__ == "__main__":
     pygame.init()
     GAME = Game()
     GAME.show_start_screen() # Display the start screen
-
-    while True: # Loop to let the player keep playing the game until they press the exit button
-        GAME.run() # Run the game
-        GAME.show_end_screen() # Show the end screen once the player has completed all levels
+    GAME.run() # Run the game
 
 
 
