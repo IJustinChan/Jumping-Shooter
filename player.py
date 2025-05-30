@@ -63,12 +63,13 @@ class Player(Sprite):
         self.__lives -= 1
 
     def jump(self):
-        self.__num_jumps += 1
+        self.__num_jumps += 1 # Increase to see if it's single or double jump
         if self.__num_jumps == 1:
-            self.__fall_count = 0
-            self.__speed_y = -self.__gravity_val*8
+            self.__fall_count = 0 # Set this value to zero to remove gravity
+            self.__speed_y = -self.__gravity_val*8 # Decrease vertical speed so player jumps upwards (negative is up)
         elif self.__num_jumps == 2:
-            self.__speed_y = -self.__gravity_val*11
+            # No need to set fall count to zero because we want gravity to still be on player otherwise they will jump significantly higher
+            self.__speed_y = -self.__gravity_val*11 # Make this a larger value so player can stay in the air longer when gravity is being applied to player
 
     def shoot(self):
         bullet_width = 40
@@ -89,12 +90,13 @@ class Player(Sprite):
         self.__bullet_list.append(bullet)
 
     def landed(self):
+        # Reset values to remove gravity and jumps
         self.__fall_count = 0
         self.__speed_y = 0
         self.__num_jumps = 0
 
     def hit_head(self):
-        self.__speed_y *= -1
+        self.__speed_y *= -1 # Make the player accelerate downwards
 
     def remove_bullet(self, bullet):
         self.__bullet_list.remove(bullet)

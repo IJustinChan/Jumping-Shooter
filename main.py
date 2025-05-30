@@ -409,21 +409,24 @@ class Game():
             
             # --- Check collision with portal ---
             if self.__player.check_collision(portal_obj.get_width(), portal_obj.get_height(), portal_obj.get_pos()) is True and self.__stars_collected == total_stars:
-                self.next_level()
-                if self.__level > max_level:
+                self.next_level() # Increase the level
+                if self.__level > max_level: # Player completed the max level so end the game
                     running = False
                 else:
-
+                    # Get the map of the new level
                     Map = self.__all_levels[self.__level]
                     additional_platforms = self.__all_extra_platforms[self.__level]
                     self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, additional_platforms, enemy_colors)
-                    self.__player.set_pos(player_pos[0], player_pos[1])
+
+                    self.__player.set_pos(player_pos[0], player_pos[1]) # Reset player position
+                    # Reset camera
                     scroll_x = 0
                     scroll_y = 0
-                    self.__player.set_lives(5)
+                    self.__player.set_lives(5) # Reset lives
 
                     total_stars = count_stars(Map)
                     self.__stars_collected = 0
+                    # Update the stars and levels text
                     stars_text.update_text(f"Stars Collected: {self.__stars_collected}/{total_stars}")
                     level_text.update_text(f"Level: {self.__level}")
                 
@@ -461,12 +464,12 @@ class Game():
                 if self.__player.get_speed_y() != 0:
                     scroll_y += self.__player.get_speed_y()
                 else:
-                    scroll_y -= 5
+                    scroll_y -= 5 # Slowly scroll up
 
             if (self.__player.get_pos()[1] + self.__player.get_height() - scroll_y >= self.__window.get_height() - scroll_area_bottom) and self.__player.get_speed_y() > 0: # Player is falling
                 scroll_y += self.__player.get_speed_y()
 
-            if scroll_y > 0:
+            if scroll_y > 0: # Stop scrolling when the player is near the bottom of the map
                 scroll_y = 0
 
             # --- OUTPUTS ---
@@ -491,6 +494,7 @@ class Game():
 
             self.__window.get_surface().blit(portal_obj.get_surface(), (portal_obj.get_pos()[0] - scroll_x, portal_obj.get_pos()[1] - scroll_y))
             
+            # Display the texts
             self.__window.get_surface().blit(black_heading.get_surface(), black_heading.get_pos())
             self.__window.get_surface().blit(player_lives_text.get_surface(), player_lives_text.get_pos())
             self.__window.get_surface().blit(level_text.get_surface(), level_text.get_pos())
@@ -499,17 +503,16 @@ class Game():
 
             self.__window.get_surface().blit(self.__player.get_surface(), (self.__player.get_pos()[0] - scroll_x, self.__player.get_pos()[1] - scroll_y))
 
-
             self.__window.update_frame()
 
 if __name__ == "__main__":
     pygame.init()
     GAME = Game()
-    GAME.show_start_screen()
+    GAME.show_start_screen() # Display the start screen
 
-    while True:
-        GAME.run()
-        GAME.show_end_screen()
+    while True: # Loop to let the player keep playing the game until they press the exit button
+        GAME.run() # Run the game
+        GAME.show_end_screen() # Show the end screen once the player has completed all levels
 
 
 
