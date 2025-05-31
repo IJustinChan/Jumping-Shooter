@@ -230,6 +230,9 @@ class Game():
         player_lives_text = Text(f"Lives: {self.__player.get_lives()}", "Arial")
         level_text = Text(f"Level: {self.__level}", "Arial", 36, 150, 0)
 
+        random_levels_text = Text("Levels are now randomly generated and may not be completable. Press 'Y' to skip.", "Arial", 20)
+        random_levels_text.set_pos(0, 45)
+
         self.__player.set_pos(0, 200)
 
         # --- Variables to control how the camera moves as the player moves ---
@@ -249,6 +252,8 @@ class Game():
         self.__player.set_pos(player_pos[0], player_pos[1])
 
         stars_text = Text(f"Stars Collected: {self.__stars_collected}/{total_stars}", "Arial", 36, 300, 0)
+
+        random_levels = False
 
         running = True
         while running:
@@ -274,6 +279,7 @@ class Game():
                     elif event.key == pygame.K_y:
                         self.next_level()
                         if self.__level > max_campaign_level: # Player completed the all the campaign levels so random levels will begin generating
+                            random_levels = True
                             Map = extra_levels.generate_random_levels()
                             additional_platforms = [] # Random levels have no additional platforms
                             self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, ENEMY_COLORS=enemy_colors)
@@ -319,7 +325,8 @@ class Game():
             elif keys_pressed[pygame.K_a] == 1 or keys_pressed[pygame.K_LEFT] == 1:
                 if check_collide_left(self.__player, self.__platform_list, self.__player.get_speed_x()) is False:
                     self.__player.move_x(keys_pressed)
-            elif keys_pressed[pygame.K_t] == 1:
+
+            if keys_pressed[pygame.K_t] == 1:
                 self.__player.set_lives(99)
 
             self.__player.apply_gravity() # Apply gravity onto the player
@@ -425,6 +432,7 @@ class Game():
             if self.__player.check_collision(portal_obj.get_width(), portal_obj.get_height(), portal_obj.get_pos()) is True and self.__stars_collected == total_stars:
                 self.next_level() # Increase the level
                 if self.__level > max_campaign_level: # Player completed the all the campaign levels so random levels will begin generating
+                    random_levels = True
                     Map = extra_levels.generate_random_levels()
                     additional_platforms = [] # Random levels have no additional platforms
                     self.__platform_list, self.__enemy_list, self.__star_list, player_pos, portal_obj = self.create_level(Map, ENEMY_COLORS=enemy_colors)
@@ -527,6 +535,9 @@ class Game():
             self.__window.get_surface().blit(player_lives_text.get_surface(), player_lives_text.get_pos())
             self.__window.get_surface().blit(level_text.get_surface(), level_text.get_pos())
             self.__window.get_surface().blit(stars_text.get_surface(), stars_text.get_pos())
+
+            if random_levels is True:
+                self.__window.get_surface().blit(random_levels_text.get_surface(), random_levels_text.get_pos())
 
 
             self.__window.get_surface().blit(self.__player.get_surface(), (self.__player.get_pos()[0] - scroll_x, self.__player.get_pos()[1] - scroll_y))
