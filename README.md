@@ -1,7 +1,7 @@
 # CSE3190-Project
 
 ## Game Overview
-Our game is called Jumping Shooter. The objective of the player is to go through a map and collect all the stars so they can go through a portal to the next level. The player will need to defeat enemies along the way by shooting the enemies. However, the enemies can also shoot back and the player only has five lives. Once the player reaches a portal, they will be taken to the next level. The first three levels of the game will always be the same. After level 3, all the other levels will be randomly generated and there will be an infinite amount. 
+Our game is called Jumping Shooter. The objective of the player is to go through a map and collect all the stars so they can go through a portal to the next level. The player will need to defeat enemies along the way by shooting the enemies. However, the enemies can also shoot back and the player only has five lives. Once the player reaches a portal, they will be taken to the next level. The first three levels of the game will always be the same. After level 3, all the other levels will be randomly generated and there will be an infinite amount of levels. 
 
 
 ## How To Run The Program
@@ -21,5 +21,6 @@ Run the file _main.py_. Ensure that Python and Pygame are installed.
 4. Some enemies have more than one life. The player may need to shoot some enemies multiple times to kill some enemies. A blue enemy has one life while a black enemy has two lives. When hitting a black enemy, the black enemy loses a life and turns into a blue enemy.
 5. If the player collides with an enemy, the enemy will be killed but the player loses one life.
 6. If the player loses all their lives, the level will reset. This means that the player respawns with five lives, but all the stars and enemies killed will return. The player will need to restart the level from the beginning. However, note that the player does not need to restart the entire game; they just need to restart the level when they die.
-7. The first three levels in the game will always be the same. Aftewards, the levels are randomly generated. Each level has their own number of stars and the player can see how many stars they collected and what the total number of stars they need to collect is. The first three levels can be completed, but the randomly generated ones may not be so the user can press "Y" to skip it. They can also press "T" to have 99 lives if they want to explore around. 
+7. The first three levels in the game will always be the same. Aftewards, the levels are randomly generated. Each level has their own number of stars and the player can see how many stars they collected and what the total number of stars they need to collect is. The first three levels can be completed, but the randomly generated ones may not be completable so the user can press "Y" to skip it. They can also press "T" to have 99 lives if they want to explore around.
+8. The player can continue playing this game as long as they want. They can exit the game by pressing the quit button on the top right corner of the pygame window.
 
